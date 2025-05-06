@@ -328,8 +328,8 @@ Model Binding is the process of mapping data from HTTP requests (URL, form input
     ```
     Bind/ClassName/FunctionName?id=10
     ```
-    
-2. Using route parameters:
+
+2. Using route parameters when method parameter is called `id`:
     
     ```
     Bind/ClassName/FunctionName/10
