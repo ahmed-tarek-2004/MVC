@@ -883,7 +883,7 @@ To ensure the token is included in the form, you must use either **Tag Helpers (
 
 ---
 
-## 📝 Example Code
+##  Example Code
 
 ### **🔹 Controller**
 
@@ -948,10 +948,10 @@ in ASP.NET MVC/Core, you **cannot override** an action method unless they have *
 Use **attribute routing** (`[HttpGet]`, `[HttpPost]`, etc.) to differentiate actions.
 
 -----
-Validation is Done at 3 layers 
-   1-Mode
-   2-Controller
-   3-View
+Validation is Done at 3 layers :
+-   1-Mode
+- 2-Controller
+- 3-View
 
 ![[Pasted image 20250319034008.png]]
 
@@ -2811,7 +2811,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
     
     - It **verifies** it (e.g., checks if the token or cookie is valid).
         
-    - If valid ==> it **fills `HttpContext.User`** with the user info (like username, roles, claims, etc.).
+    - If valid ➔ it **fills `HttpContext.User`** with the user info (like username, roles, claims, etc.).
         
 - If **nothing is found** or it's invalid :
     
@@ -3110,4 +3110,249 @@ If you assign a role to a user **after they’ve already logged in,** the user w
  
  
 ---
-## Day 9
+##                                     Day 9
+**1️- Partial View:**
+
+-  **A small, reusable Razor view.**
+    
+-  **Included in a larger view to render part of the page.**
+    
+    - Think of it like a **view _without_ its own layout** (no full page structure).
+        
+-  **Often used for:**
+    
+    - Reusable UI pieces (e.g., a product card, menu, footer).
+        
+    - Keeping code clean and modular.
+        
+    - Loading content dynamically via AJAX (e.g., updating a section without full reload).
+        
+
+---
+
+** How to create:**
+
+- The process is the **same as creating a normal view.**
+    
+- ✅ Just **check the option "Create as a partial view"** (in Visual Studio, for example).
+
+ - ![[Pasted image 20250506164458.png]]
+ ---
+ - it is recommended to start partial view with " _ " like `_EmoCard.cshtml
+
+``` csharp
+@model Employee
+
+<h1>@Model.Name</h1>
+<h2>@Model.DepartmentID</h2>
+<h2>@Model.Salary</h2>
+<h2>@Model.Address</h2>
+
+```
+##  Why you **don’t include things like:**
+
+- `ViewData`
+    
+- `<head>` tags
+    
+- `<script>` or `<link>` includes (like jQuery, CSS)
+    
+
+ **Because:**
+ 
+- The **partial view is _injected into_ a main view.**
+    
+- The **main view already has the full layout:**
+    
+    - HTML `<head>`, `<body>`, title, scripts, styles, etc.
+        
+- The partial view is meant to **focus only on the small section of content** it is responsible for. 
+ 
+ - As we see it can easy take a Model 
+ 
+ - #### **To include a Partial View in the Main View:
+ 
+**1️⃣ Using **HTML Helper:**
+``` csharp
+@Html.Partial("_NavPartial")
+```
+
+OR (recommended for async):
+``` csharp
+@await Html.PartialAsync("_NavPartial")
+```
+
+OR using **RenderPartial** (writes directly to the output stream):
+``` csharp
+@{   
+Html.RenderPartial("_NavPartial");
+//or 
+await Html.RenderPartialAsync("_NavPartial"); 
+}
+```
+✅ **Notes:**
+
+- `Html.Partial()` returns an `IHtmlContent` (you output it).
+    
+- `Html.RenderPartial()` writes directly to the response stream (slightly more efficient but less flexible in Razor pages).
+    
+
+---
+
+**2️⃣ Using **Tag Helper ( _recommended_ for Razor Pages and MVC):**
+
+``` csharp
+ <partial name="_NavPartial" />
+```
+
+---
+
+## **Note:**
+ by default A **partial view** will **inherit the model** from the **parent (main) view** **unless you explicitly pass a different model.**
+
+##### -  What if you want to pass a **different model**?
+You can **explicitly pass a model** when rendering:
+
+1- By Tag Helper :
+``` csharp
+<partial name="_EmployeeDetails" model="Model.EmployeeDetails" />
+```
+`model` is an attribute , then pass it the new model you need 
+
+2- By Html Helper :
+``` csharp
+@await Html.PartialAsync("_EmployeeDetails", Model.EmployeeDetails);
+```
+
+---
+- At Action I Can Return a partial view :
+``` csharp
+public IActionResult EmpCardPartial(int id)
+{
+return PartialView("_EmpCard",EmployeeRepository.GetById(id));//Model=Null
+}
+
+```
+
+## We have a Question why we return a partial view ?
+
+**We return a partial view:**
+
+-  **When we don’t want to refresh the whole page**  
+    ➔ This is where **AJAX** comes in: you send an AJAX request, and the server returns **only the partial view**, which JavaScript injects into the page dynamically.
+    
+-  **When we want to reuse a small, specific part of the UI in multiple places**  
+    ➔ Even **without AJAX**, you can render partial views **inside other views** to avoid repeating code.
+
+
+---
+ ![[Pasted image 20250506173903.png]]
+ 
+ - ###  AJAX Request
+  - it's used to update part of the page without reloading the whole thing.
+  
+  - ## But technically:
+
+- **The HTTP request itself is a _full request_.**
+    
+    - When you send an AJAX request using `XMLHttpRequest`, it **goes through the full HTTP pipeline:**
+        
+        - The browser sends **full HTTP headers, cookies, and body** (if applicable).
+            
+        - The server (like ASP.NET) sees it as a **normal HTTP request**.
+            
+- What makes it **feel "partial"** is **how you _handle the response on the client side._**
+    
+    - Instead of reloading the **whole page** (like with a normal form submission),
+        
+    - You **use JavaScript to update just part of the page** (e.g., a `<div>`, a table, a form section)
+
+- **XmlHttpRequest:**  
+    ➔ This is the JavaScript object that **creates and manages AJAX requests.** and received ***XML or JSON***  
+- **js "Dom":**  
+    ➔ After the response is received, **JavaScript updates the DOM (HTML content)** dynamically.
+- **CSS:**  
+    ➔ You can also manipulate CSS (styles) as part of the dynamic update.
+
+|**Aspect**|**Normal HTTP Request**|**AJAX (XMLHttpRequest / Partial Request)**|
+|---|---|---|
+|Request type|Full HTTP request|Full HTTP request|
+|How it's sent|Browser reload or form submit|JavaScript sends it (in background)|
+|Page reload?|Yes, whole page reloads|No, page stays as is|
+|What updates on the page?|Entire page is replaced with server response|Only parts of the page are updated via JavaScript|
+|Example|Submitting a contact form that reloads the page|Submitting a form and showing success without reload|
+|Headers & body|Full HTTP headers and body|Full HTTP headers and body|
+|Use case|Full page navigation|Dynamic page updates (e.g., live search, chat updates)|
+
+To implement Ajax :
+``` csharp
+@model List<Employee>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<a asp-action="New" asp-controller="Employee">NEw</a>
+
+
+<div id="div1" style="border:2px solid blue"></div>
+
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>SAlary</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.Salary</td>
+            <td>
+                <a href="/Employee/Edit/@item.Id">Edit</a>
+            </td>
+            <td>
+                <a href="/Employee/EmpCardPartial/@item.Id" onclick="GetEmpData(@item.Id)">Details</a>
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+<script src="~/lib/jquery/dist/jquery.js" ></script>
+<script>
+    function GetEmpData(EmpID) {
+        event.preventDefault();
+       
+		//Ajax Call Endpont using jquery
+        $.ajax({
+            url: "/Employee/EmpCardPartial/" + EmpID,
+            success: function (result) {
+                console.log(result);
+                $("#div1").html(result);
+            }
+        });
+
+    }
+</script>
+```
+
+1- We make a div with id=""div1" to get the partial view on it 
+2- to use client side we used JS and Jquery , so we uploaded `Jquery`
+3- We used ` event.preventDefault();` ➔ to stop the anchor tag’s default behavior** (which is to make a full-page HTTP request to the `href` URL).
+4- using Ajax Call by Jquery by  a popular ready code:
+``` csharp
+        $.ajax({
+            url: "/Employee/EmpCardPartial/" + EmpID,
+            success: function (result) {
+                console.log(result);
+                $("#div1").html(result);
+            }
+        });
+```
+- We put Wanted URL ,and Dom for Wanted Div 
+- So We have made an ajax Call 
