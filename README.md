@@ -328,8 +328,8 @@ Model Binding is the process of mapping data from HTTP requests (URL, form input
     ```
     Bind/ClassName/FunctionName?id=10
     ```
-    
-2. Using route parameters:
+
+2. Using route parameters when method parameter is called `id`:
     
     ```
     Bind/ClassName/FunctionName/10
@@ -883,7 +883,7 @@ To ensure the token is included in the form, you must use either **Tag Helpers (
 
 ---
 
-## 📝 Example Code
+##  Example Code
 
 ### **🔹 Controller**
 
@@ -948,12 +948,12 @@ in ASP.NET MVC/Core, you **cannot override** an action method unless they have *
 Use **attribute routing** (`[HttpGet]`, `[HttpPost]`, etc.) to differentiate actions.
 
 -----
-Validation is Done at 3 layers 
-   1-Mode
-   2-Controller
-   3-View
+Validation is Done at 3 layers :
+-   1-Mode
+- 2-Controller
+- 3-View
 
-![[Pasted image 20250319034008.png]]
+<img src="img/validation.png" alt="Screenshot" width="1000"/>
 
 ### ***Another Example***
 
@@ -1052,9 +1052,7 @@ public class UserViewModel
      return View("View1", std);
  }
 ```
-
-![[Pasted image 20250320223212.png]]
-
+<img src="img/custom.png" alt="Screenshot" width="500"/>
 
 - ==Note That It is Server-Side== 
 ### **When Should You Use It ?**
@@ -1256,7 +1254,8 @@ public IActionResult check(string Username ,string Email ,string Address)
     
 3. **Do nothing and immediately call the next middleware.**
 
-![[Pasted image 20250422170206.png]]
+<img src="img/Middleware.png" alt="Screenshot" width="500"/>
+
 #### Note that :
 ###### M1 -> M2 -> M3 -> M4 -> M3 -> M2 -> M1 
 
@@ -2076,7 +2075,8 @@ public IActionResult Details([FromServices] IEmployeeRepository employeeReposito
 ```
 - When you use **Action Injection** in a controller, the **[FromServices]** attribute tells the Dependency Injection (DI) system to **inject the service directly into the action parameter**, ignoring any model binding that might otherwise be used.
 - examples :
-     ![[Pasted image 20250427142116.png]]
+    <img src="img/form.png" alt="Screenshot" width="1000"/>
+
  
 | Attribute               | Where the value comes from                  | Example                                            |
 | ----------------------- | ------------------------------------------- | -------------------------------------------------- |
@@ -2218,7 +2218,8 @@ public class EmployeeRepository
 #                                   Day 8
 
 ##  1 - Filters 
-![[Pasted image 20250501142533.png]]
+<img src="img/filter.png" alt="Screenshot" width="1000"/>
+
   -  1️- **A filter is a block of code that executes before, after, or around the execution of an action method, result, or other parts of the request pipeline.**
 
  - 2️- **Filters are used to reduce repetitive code by handling cross-cutting concerns such as logging, caching, authorization, or error handling in a centralized way.**
@@ -2231,7 +2232,8 @@ public class EmployeeRepository
 ***Note*** :  <span style="color:gold">Filters</span> is at <span style="color:gold"> MVC</span> Level,  Unlike  <span style="color:gold">MiddleWares </span>is that At <span style="color:gold">Application Level</span>
 
 ***Built-in Filters*** :
-![[Pasted image 20250430171632.png]]
+<img src="img/builtin.png" alt="Screenshot" width="1000"/>
+
 
 ##  1️-  **Authorization Filters**
 
@@ -2467,7 +2469,8 @@ At Program.cs
 | 4️⃣  | After View is rendered and sent | Cleanup, log completion, post-processing   | `OnResultExecuted` (in `IResultFilter` / `IAsyncResultFilter`)  |
 
 ---
-![[Pasted image 20250501152956.png]]
+<img src="img/identity.png" alt="Screenshot" width="1000"/>
+
 - Sometimes We need to add layer between Repository and model called Service to make mapping 
 
 - **We Need To Know What Are Identity Classes?** 
@@ -2740,16 +2743,18 @@ This code **registers ASP.NET Core Identity** in the **dependency injection (DI)
 -------
 
 - Instead Of Build The View From Scratch We Have Built-in Template We Can Use  
-![[Pasted image 20250501174236.png]]
+<img src="img/razor1.png" alt="Screenshot" width="1000"/>
 
 
 
-![[Pasted image 20250501174359.png]]
+<img src="img/razor2" alt="Screenshot" width="1000"/>
+
 
 I chose the Template and the ViewModel That will apply for it 
 
 ---
-![[Pasted image 20250501142022.png]]
+<img src="img/summary.png" alt="Screenshot" width="1000"/>
+
 - the steps that is  listed form the core sequence to implement an authentication module using **ASP.NET Core Identity with Entity Framework Core**. However, to ensure your authentication module is complete and functional, :
 
     - 1. Install package Identity "Microsoft.AspNetCore.Identity.EntityFrameworkCore"
@@ -2811,7 +2816,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
     
     - It **verifies** it (e.g., checks if the token or cookie is valid).
         
-    - If valid ==> it **fills `HttpContext.User`** with the user info (like username, roles, claims, etc.).
+    - If valid ➔ it **fills `HttpContext.User`** with the user info (like username, roles, claims, etc.).
         
 - If **nothing is found** or it's invalid :
     
@@ -3110,4 +3115,632 @@ If you assign a role to a user **after they’ve already logged in,** the user w
  
  
 ---
-## Day 9
+##                                     Day 9
+**1️- Partial View:**
+
+-  **A small, reusable Razor view.**
+    
+-  **Included in a larger view to render part of the page.**
+    
+    - Think of it like a **view _without_ its own layout** (no full page structure).
+        
+-  **Often used for:**
+    
+    - Reusable UI pieces (e.g., a product card, menu, footer).
+        
+    - Keeping code clean and modular.
+        
+    - Loading content dynamically via AJAX (e.g., updating a section without full reload).
+        
+
+---
+
+** How to create:**
+
+- The process is the **same as creating a normal view.**
+    
+- ✅ Just **check the option "Create as a partial view"** (in Visual Studio, for example).
+
+ - <img src="img/selcet.png" alt="Screenshot" width="1000"/>
+
+ ---
+ - it is recommended to start partial view with " _ " like `_EmoCard.cshtml
+
+``` csharp
+@model Employee
+
+<h1>@Model.Name</h1>
+<h2>@Model.DepartmentID</h2>
+<h2>@Model.Salary</h2>
+<h2>@Model.Address</h2>
+
+```
+##  Why you **don’t include things like:**
+
+- `ViewData`
+    
+- `<head>` tags
+    
+- `<script>` or `<link>` includes (like jQuery, CSS)
+    
+
+ **Because:**
+ 
+- The **partial view is _injected into_ a main view.**
+    
+- The **main view already has the full layout:**
+    
+    - HTML `<head>`, `<body>`, title, scripts, styles, etc.
+        
+- The partial view is meant to **focus only on the small section of content** it is responsible for. 
+ 
+ - As we see it can easy take a Model 
+ 
+ - #### **To include a Partial View in the Main View:
+ 
+**1️⃣ Using HTML Helper:**
+``` csharp
+@Html.Partial("_NavPartial")
+```
+
+OR (recommended for async):
+``` csharp
+@await Html.PartialAsync("_NavPartial")
+```
+
+OR using **RenderPartial** (writes directly to the output stream):
+``` csharp
+@{   
+Html.RenderPartial("_NavPartial");
+//or 
+await Html.RenderPartialAsync("_NavPartial"); 
+}
+```
+✅ **Notes:**
+
+- `Html.Partial()` returns an `IHtmlContent` (you output it).
+    
+- `Html.RenderPartial()` writes directly to the response stream (slightly more efficient but less flexible in Razor pages).
+    
+
+---
+
+**2️⃣ Using Tag Helper ( _recommended_ for Razor Pages and MVC):**
+
+``` csharp
+ <partial name="_NavPartial" />
+```
+
+---
+
+## **Note:**
+ by default A **partial view** will **inherit the model** from the **parent (main) view** **unless you explicitly pass a different model.**
+
+##### -  What if you want to pass a **different model**?
+You can **explicitly pass a model** when rendering:
+
+1- By Tag Helper :
+``` csharp
+<partial name="_EmployeeDetails" model="Model.EmployeeDetails" />
+```
+`model` is an attribute , then pass it the new model you need 
+
+2- By Html Helper :
+``` csharp
+@await Html.PartialAsync("_EmployeeDetails", Model.EmployeeDetails);
+```
+
+---
+- At Action I Can Return a partial view :
+``` csharp
+public IActionResult EmpCardPartial(int id)
+{
+return PartialView("_EmpCard",EmployeeRepository.GetById(id));//Model=Null
+}
+
+```
+
+## We have a Question why we return a partial view ?
+
+**We return a partial view:**
+
+-  **When we don’t want to refresh the whole page**  
+    ➔ This is where **AJAX** comes in: you send an AJAX request, and the server returns **only the partial view**, which JavaScript injects into the page dynamically.
+    
+-  **When we want to reuse a small, specific part of the UI in multiple places**  
+    ➔ Even **without AJAX**, you can render partial views **inside other views** to avoid repeating code.
+
+
+---
+<img src="img/Ajax.png" alt="Ajax" width="1000"/>
+
+ 
+ - ###  AJAX Request
+  - it's used to update part of the page without reloading the whole thing.
+  
+  - ## But technically:
+
+- **The HTTP request itself is a _full request_.**
+    
+    - When you send an AJAX request using `XMLHttpRequest`, it **goes through the full HTTP pipeline:**
+        
+        - The browser sends **full HTTP headers, cookies, and body** (if applicable).
+            
+        - The server (like ASP.NET) sees it as a **normal HTTP request**.
+            
+- What makes it **feel "partial"** is **how you _handle the response on the client side._**
+    
+    - Instead of reloading the **whole page** (like with a normal form submission),
+        
+    - You **use JavaScript to update just part of the page** (e.g., a `<div>`, a table, a form section)
+
+- **XmlHttpRequest:**  
+    ➔ This is the JavaScript object that **creates and manages AJAX requests.** and received ***XML or JSON***  
+- **js "Dom":**  
+    ➔ After the response is received, **JavaScript updates the DOM (HTML content)** dynamically.
+- **CSS:**  
+    ➔ You can also manipulate CSS (styles) as part of the dynamic update.
+
+|**Aspect**|**Normal HTTP Request**|**AJAX (XMLHttpRequest / Partial Request)**|
+|---|---|---|
+|Request type|Full HTTP request|Full HTTP request|
+|How it's sent|Browser reload or form submit|JavaScript sends it (in background)|
+|Page reload?|Yes, whole page reloads|No, page stays as is|
+|What updates on the page?|Entire page is replaced with server response|Only parts of the page are updated via JavaScript|
+|Example|Submitting a contact form that reloads the page|Submitting a form and showing success without reload|
+|Headers & body|Full HTTP headers and body|Full HTTP headers and body|
+|Use case|Full page navigation|Dynamic page updates (e.g., live search, chat updates)|
+
+To implement Ajax :
+``` csharp
+@model List<Employee>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<a asp-action="New" asp-controller="Employee">NEw</a>
+
+
+<div id="div1" style="border:2px solid blue"></div>
+
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>SAlary</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.Salary</td>
+            <td>
+                <a href="/Employee/Edit/@item.Id">Edit</a>
+            </td>
+            <td>
+                <a href="/Employee/EmpCardPartial/@item.Id" onclick="GetEmpData(@item.Id)">Details</a>
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+<script src="~/lib/jquery/dist/jquery.js" ></script>
+<script>
+    function GetEmpData(EmpID) {
+        event.preventDefault();
+       
+		//Ajax Call Endpont using jquery
+        $.ajax({
+            url: "/Employee/EmpCardPartial/" + EmpID,
+            success: function (result) {
+                console.log(result);
+                $("#div1").html(result);
+            }
+        });
+
+    }
+</script>
+```
+
+1- We make a div with id=""div1" to get the partial view on it 
+2- to use client side we used JS and Jquery , so we uploaded `Jquery`
+3- We used ` event.preventDefault();` ➔ to stop the anchor tag’s default behavior** (which is to make a full-page HTTP request to the `href` URL).
+4- using Ajax Call by Jquery by  a popular ready code:
+``` csharp
+        $.ajax({
+            url: "/Employee/EmpCardPartial/" + EmpID,
+            success: function (result) {
+                console.log(result);
+                $("#div1").html(result);
+            }
+        });
+```
+- We put Wanted URL ,and Dom for Wanted Div 
+- So We have made an ajax Call
+ 
+- -----------------
+Example using `AJAX`:
+	1- I want to make 2 drop-down lists , one for `Department` and other for `Employees`
+		at selected department 
+
+1- I load all Departments at Model
+2- add method for Employee to return all Department Id
+3- at department I return all employee result as a `JSON` file
+4- use Jquery and JS to make Partial Request
+
+ 1- Employee 
+``` csharp
+public List<Employee> GetByDEptID(int deptID)
+{
+    return context.Employee.Where(e=>e.DepartmentID== deptID).ToList();
+}
+```
+
+2- at Department Controller
+```csharp
+ public IActionResult GetEmpsByDEptId(int deptId)
+ {
+     List<Employee> EmpList= EmployeeREpo.GetByDEptID(deptId);
+     return Json(EmpList);
+ }
+```
+
+3- at Department View
+``` csharp
+@model List<Department>
+@{
+    ViewData["Title"] = "DeptEmps";
+}
+
+<h1>DeptEmps</h1>
+
+<select id="DeptId" name="DeptID" class="form form-control" onchange="GetEmp()">
+    @foreach(var deptItem in Model){
+        <option value="@deptItem.Id">@deptItem.Name</option>
+    }
+</select>
+<br />
+<select id="Emps" name="Emps" class="form form-control">
+</select>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    function GetEmp() {
+        var deptID= document.getElementById("DeptId").value;
+        var empElement = document.getElementById("Emps");
+        empElement.innerHTML = "";
+        console.log(deptID);
+        //Ajax call json
+
+        $.ajax({
+            url: "/DEpartment/GetEmpsByDEptId?deptId=" + deptID
+            , success: function (result) {
+                console.log(result)
+                for (let emp of result) {
+                    empElement.innerHTML += "<option value='" + emp.id + "'>" + emp.name + "</option>";
+                }
+
+            }
+        });
+    }
+</script>
+
+
+```
+
+- First We Loaded All Departments, and use `onChange()` to every time I change the selected department I load it's employees by `GetEmp()` function
+``` csharp
+<select id="DeptId" name="DeptID" class="form form-control" onchange="GetEmp()">
+    @foreach(var deptItem in Model){
+        <option value="@deptItem.Id">@deptItem.Name</option>
+    }
+</select>
+```
+
+ - Then We make an Empty Select To load all Employee Related To Selected Department 
+``` csharp
+<select id="Emps" name="Emps" class="form form-control"></select>
+```
+
+- We use Jquery
+``` csharp
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    function GetEmp() {
+        var deptID= document.getElementById("DeptId").value;
+        var empElement = document.getElementById("Emps");
+        empElement.innerHTML = "";
+        console.log(deptID);
+        //Ajax call json
+
+        $.ajax({
+            url: "/DEpartment/GetEmpsByDEptId?deptId=" + deptID
+            , success: function (result) {
+                console.log(result)
+                for (let emp of result) {
+                    empElement.innerHTML += "<option value='" + emp.id + "'>" + emp.name + "</option>";
+                }
+            }
+        });
+    }
+</script>
+```
+`result` s the **data returned by the server when the AJAX request completes successfully**.
+
+Here’s what happens step-by-step:
+
+1. **The browser sends a request** to `/DEpartment/GetEmpsByDEptId?deptId=...`.
+    
+2. **Your server handles that request** and returns a response—usually JSON if you’re dealing with data.
+    
+3. **`result` holds that response data** (e.g., an array of employee objects like `[{ id: 1, name: 'Alice' }, ...]`).
+4. I Add The response values to the empty select 
+---
+- ## Routing 
+   - What is Routing :
+   **routing** refers to the system that **maps incoming HTTP requests to specific code**—typically controllers, actions, Razor pages, or endpoints.
+
+###     What it means:
+
+- When a user visits a URL like `/products/details/5`, routing figures out **which controller and action** (or page) should handle that request.
+    
+- The routing system **parses the URL** and **binds parameters** (like the `5` in the example) to your method’s parameters.
+
+
+Routing is doing by 2 types :
+
+- 1- **convention-based routing** :You can use **convention-based routing** (via route    templates like `{controller}/{action}/{id?}`) 
+- 2- **attribute routing** (via `[Route()]` attributes).
+
+---
+## 1- ***Convention-based routing***
+  - We need to know about URL 
+    1- `/` ➔ called a delimiter
+    2- /.../   or  /emp/ ➔ called Segmrnt
+  - so , **Convention-based routing** means:
+
+- You define a **general pattern** (a _convention_) that tells ASP.NET **how to map URLs to controller actions**.
+    
+- URLs that follow this **pattern** automatically map to your code **without needing special route definitions for each one.** 
+- pattern 
+``` csharp
+pattern: "{controller}/{action}/{id?}"
+```
+- `{controller}` → the **name of the controller** (minus `Controller`).
+    
+- `{action}` → the **method (action)** inside that controller.
+    
+- `{id?}` → an **optional parameter** (like a record ID).
+
+- the **pattern** can include:
+
+   1️⃣ **Placeholders**  
+   2️⃣ **Literals**
+
+---
+
+## 1️⃣ **Placeholders (Route Parameters)**
+
+These are **variable parts** of the URL, written inside `{ }`.
+
+➡️ Examples:
+
+- `{controller}`
+    
+- `{action}`
+    
+- `{id}`
+    
+
+ **What they do:**
+
+- **Capture part of the URL** and map it to a value.
+    
+- Are **dynamic**—they change based on what’s in the URL.
+    
+
+---
+
+**Example pattern:**
+
+``` csharp
+`"{controller}/{action}/{id?}"`
+```
+**URL:** `/Products/Details/5`
+
+|Part of the URL|Placeholder it matches|
+|---|---|
+|`Products`|`{controller}`|
+|`Details`|`{action}`|
+|`5`|`{id}`|
+
+---
+
+## 2️⃣ **Literals (Fixed Parts)**
+
+These are **hardcoded parts** of the pattern. They are **static** and must **exactly match** part of the URL.
+
+➡️ Examples:
+
+- `shop`
+    
+- `products`
+    
+- `api`
+    
+
+ **What they do:**
+
+- Must **be present in the URL** exactly as written.
+    
+- Are **not dynamic**—if the literal doesn't match, the route won’t match.
+---
+To enable routing, you need to call:
+
+``` csharp
+app.UseRouting();
+```
+
+This **adds the routing middleware** to the pipeline. It tells ASP.NET Core:
+
+> “We are going to process incoming URLs and match them to routes.”
+
+Without `UseRouting()`, **no routing will work.**
+
+- #### then We can customize our Routing 
+- Example :
+At Program .cs
+``` csharp
+app.MapControllerRoute("Route2", "R2",
+              new { controller = "Route", action = "Method2" }
+   );
+```
+
+At Route Controller
+``` csharp
+   public IActionResult Method2()
+   {
+       return Content("M2");
+   }
+```
+
+
+The **first parameter** of `MapControllerRoute()` is a **name for the route**. In this case, `"Route2"` is simply a **name** for the route being defined , <span style="color:gold"> it must be unique.</span>
+### Here's how it breaks down:
+
+1. **`"Route2"`** – This is the **name** of the route. It’s an identifier that you can use to reference or manage this route later, but it **doesn’t affect the URL matching** directly. It's mainly for **internal reference**.
+    
+2. **`"R2"`** – This is the **URL pattern** that will be used to match incoming requests. So, any request to `/R2` will be mapped to this route.
+    
+3. **`new { controller = "Route", action = "Method2" }`** – This part defines the **controller** and **action** that will be invoked when the route is matched:
+    
+    - **Controller:** `RouteController`
+        
+    - **Action:** `Method2`
+        
+4. We can Directly Write for the URL `/R2/` then Will go to Wanted Method 
+### **How Does It Work?**
+
+- When someone visits `/R2` in the browser, this route is triggered.
+
+- The request will then be directed to the **`RouteController`** and will invoke the **`Method2`** action inside that controller.
+
+
+- if the method receives an attribute like :
+``` csharp
+   public IActionResult Method2(string name)
+   {
+       return Content("M2");
+   }
+```
+we use :
+``` lua
+/R2?name=ali
+```
+- attribute must be sane name as called in url 
+
+- We Can Add constrains like :
+
+| **Constraint** | **Description**                                                         | **Example**                         |
+| -------------- | ----------------------------------------------------------------------- | ----------------------------------- |
+| alpha          | Matches uppercase or lowercase Latin alphabet characters (a-z, A-Z)     | `{x:alpha}`                         |
+| bool           | Matches a Boolean value.                                                | `{x:bool}`                          |
+| datetime       | Matches a **DateTime** value.                                           | `{x:datetime}`                      |
+| decimal        | Matches a decimal value.                                                | `{x:decimal}`                       |
+| double         | Matches a 64-bit floating-point value.                                  | `{x:double}`                        |
+| float          | Matches a 32-bit floating-point value.                                  | `{x:float}`                         |
+| guid           | Matches a GUID value.                                                   | `{x:guid}`                          |
+| int            | Matches a 32-bit integer value.                                         | `{x:int}`                           |
+| length         | Matches a string with the specified length or within a specified range. | `{x:length(6)}`, `{x:length(1,20)}` |
+| long           | Matches a 64-bit integer value.                                         | `{x:long}`                          |
+| max            | Matches an integer with a maximum value.                                | `{x:max(10)}`                       |
+| maxlength      | Matches a string with a maximum length.                                 | `{x:maxlength(10)}`                 |
+| min            | Matches an integer with a minimum value.                                | `{x:min(10)}`                       |
+| minlength      | Matches a string with a minimum length.                                 | `{x:minlength(10)}`                 |
+| range          | Matches an integer within a range of values.                            | `{x:range(10,50)}`                  |
+| regex          | Matches a regular expression.                                           | `{x:regex(^\d{3}-\d{3}-\d{4}$)}`    |
+- like :
+``` csharp
+app.MapControllerRoute("Route2", "R2/{name}/{age:int}",
+              new { controller = "Route", action = "Method2" }
+   );
+```
+
+- makes third segment name must be same for for method attribute 
+    like :
+``` csharp
+ public IActionResult Method2(string name)
+ {
+     return Content("M2");
+ }
+```
+
+``` csharp
+app.MapControllerRoute("Route2", "R2/{name}",
+              new { controller = "Route", action = "Method2" }
+   );
+```
+- Will pass attribute value by `/name`
+
+- We can also make segment is optional like 
+``` csharp
+app.MapControllerRoute("Route2", "R2/{age:int}/{name?}",
+              new { controller = "Route", action = "Method2" }
+   );
+```
+
+- we should make optional segment the last segment 
+- we can make default value for the segment by :
+``` csharp
+app.MapControllerRoute("Route2", "R2/{name=ali}",
+              new { controller = "Route", action = "Method2" }
+   );
+```
+
+- ## ***Note :***
+- Most Customized Route must be first then we put default Route
+- 
+``` csharp
+app.MapControllerRoute("Route2", "R2/{controller}/{action}");
+```
+- Here We can use Controller , Action For URL , it is the default for Microsoft so , We can put it at last 
+---
+## 2- _**Attribute-based routing**_ (also called **attribute routing**)
+
+1- before the Action 
+``` csharp
+   [Route("M1/{age:int}/{name?}",Name ="R1")]
+   public IActionResult Method1()//string name,int age)
+   {
+       return Content("M1");
+   }
+```
+
+1- it takes the Routed URL , and name of Route
+
+- ## Note:
+- _**Attribute-based routing_ : used Most For API
+- 2- ***Convention-based routing*** : Used Most For MVC   
+----
+- ## How Can I Make Deployment 
+- 1- Right Click on project name 
+- 2- choose publish 
+- 3- choose Folder if we don't Have Azure or Docker 
+- ![[Pasted image 20250507011418.png]]
+- 4- then choose location 
+- 5- choose setting 
+- ![[Pasted image 20250507010701.png]]
+- ![[Pasted image 20250507010740.png]]
+- 6- We have 2 options :
+	- 1- Framework-dependent :if host has the runtime
+	- 2- Self-contained: download all runtime requirement if host does not have the runtime 
+- 7-click save .
+- -----
+- ## We Finished （*＾-＾*）
