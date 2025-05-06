@@ -3141,7 +3141,7 @@ If you assign a role to a user **after they’ve already logged in,** the user w
     
 - ✅ Just **check the option "Create as a partial view"** (in Visual Studio, for example).
 
- - <img src="img/select.png" alt="Screenshot" width="1000"/>
+ - <img src="img/selcet.png" alt="Screenshot" width="1000"/>
 
  ---
  - it is recommended to start partial view with " _ " like `_EmoCard.cshtml
@@ -3178,7 +3178,7 @@ If you assign a role to a user **after they’ve already logged in,** the user w
  
  - #### **To include a Partial View in the Main View:
  
-**1️⃣ Using **HTML Helper:**
+**1️⃣ Using HTML Helper:**
 ``` csharp
 @Html.Partial("_NavPartial")
 ```
@@ -3205,7 +3205,7 @@ await Html.RenderPartialAsync("_NavPartial");
 
 ---
 
-**2️⃣ Using **Tag Helper ( _recommended_ for Razor Pages and MVC):**
+**2️⃣ Using Tag Helper ( _recommended_ for Razor Pages and MVC):**
 
 ``` csharp
  <partial name="_NavPartial" />
@@ -3252,7 +3252,7 @@ return PartialView("_EmpCard",EmployeeRepository.GetById(id));//Model=Null
 
 
 ---
-<img src="img/Ajax.png" alt="Screenshot" width="1000"/>
+<img src="img/Ajax.png" alt="Ajax" width="1000"/>
 
  
  - ###  AJAX Request
