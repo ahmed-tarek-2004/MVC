@@ -3362,4 +3362,385 @@ To implement Ajax :
         });
 ```
 - We put Wanted URL ,and Dom for Wanted Div 
-- So We have made an ajax Call 
+- So We have made an ajax Call
+ 
+- -----------------
+Example using `AJAX`:
+	1- I want to make 2 drop-down lists , one for `Department` and other for `Employees`
+		at selected department 
+
+1- I load all Departments at Model
+2- add method for Employee to return all Department Id
+3- at department I return all employee result as a `JSON` file
+4- use Jquery and JS to make Partial Request
+
+ 1- Employee 
+``` csharp
+public List<Employee> GetByDEptID(int deptID)
+{
+    return context.Employee.Where(e=>e.DepartmentID== deptID).ToList();
+}
+```
+
+2- at Department Controller
+```csharp
+ public IActionResult GetEmpsByDEptId(int deptId)
+ {
+     List<Employee> EmpList= EmployeeREpo.GetByDEptID(deptId);
+     return Json(EmpList);
+ }
+```
+
+3- at Department View
+``` csharp
+@model List<Department>
+@{
+    ViewData["Title"] = "DeptEmps";
+}
+
+<h1>DeptEmps</h1>
+
+<select id="DeptId" name="DeptID" class="form form-control" onchange="GetEmp()">
+    @foreach(var deptItem in Model){
+        <option value="@deptItem.Id">@deptItem.Name</option>
+    }
+</select>
+<br />
+<select id="Emps" name="Emps" class="form form-control">
+</select>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    function GetEmp() {
+        var deptID= document.getElementById("DeptId").value;
+        var empElement = document.getElementById("Emps");
+        empElement.innerHTML = "";
+        console.log(deptID);
+        //Ajax call json
+
+        $.ajax({
+            url: "/DEpartment/GetEmpsByDEptId?deptId=" + deptID
+            , success: function (result) {
+                console.log(result)
+                for (let emp of result) {
+                    empElement.innerHTML += "<option value='" + emp.id + "'>" + emp.name + "</option>";
+                }
+
+            }
+        });
+    }
+</script>
+
+
+```
+
+- First We Loaded All Departments, and use `onChange()` to every time I change the selected department I load it's employees by `GetEmp()` function
+``` csharp
+<select id="DeptId" name="DeptID" class="form form-control" onchange="GetEmp()">
+    @foreach(var deptItem in Model){
+        <option value="@deptItem.Id">@deptItem.Name</option>
+    }
+</select>
+```
+
+ - Then We make an Empty Select To load all Employee Related To Selected Department 
+``` csharp
+<select id="Emps" name="Emps" class="form form-control"></select>
+```
+
+- We use Jquery
+``` csharp
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    function GetEmp() {
+        var deptID= document.getElementById("DeptId").value;
+        var empElement = document.getElementById("Emps");
+        empElement.innerHTML = "";
+        console.log(deptID);
+        //Ajax call json
+
+        $.ajax({
+            url: "/DEpartment/GetEmpsByDEptId?deptId=" + deptID
+            , success: function (result) {
+                console.log(result)
+                for (let emp of result) {
+                    empElement.innerHTML += "<option value='" + emp.id + "'>" + emp.name + "</option>";
+                }
+            }
+        });
+    }
+</script>
+```
+`result` s the **data returned by the server when the AJAX request completes successfully**.
+
+Here’s what happens step-by-step:
+
+1. **The browser sends a request** to `/DEpartment/GetEmpsByDEptId?deptId=...`.
+    
+2. **Your server handles that request** and returns a response—usually JSON if you’re dealing with data.
+    
+3. **`result` holds that response data** (e.g., an array of employee objects like `[{ id: 1, name: 'Alice' }, ...]`).
+4. I Add The response values to the empty select 
+---
+- ## Routing 
+   - What is Routing :
+   **routing** refers to the system that **maps incoming HTTP requests to specific code**—typically controllers, actions, Razor pages, or endpoints.
+
+###     What it means:
+
+- When a user visits a URL like `/products/details/5`, routing figures out **which controller and action** (or page) should handle that request.
+    
+- The routing system **parses the URL** and **binds parameters** (like the `5` in the example) to your method’s parameters.
+
+
+Routing is doing by 2 types :
+
+- 1- **convention-based routing** :You can use **convention-based routing** (via route    templates like `{controller}/{action}/{id?}`) 
+- 2- **attribute routing** (via `[Route()]` attributes).
+
+---
+## 1- ***Convention-based routing***
+  - We need to know about URL 
+    1- `/` ➔ called a delimiter
+    2- /.../   or  /emp/ ➔ called Segmrnt
+  - so , **Convention-based routing** means:
+
+- You define a **general pattern** (a _convention_) that tells ASP.NET **how to map URLs to controller actions**.
+    
+- URLs that follow this **pattern** automatically map to your code **without needing special route definitions for each one.** 
+- pattern 
+``` csharp
+pattern: "{controller}/{action}/{id?}"
+```
+- `{controller}` → the **name of the controller** (minus `Controller`).
+    
+- `{action}` → the **method (action)** inside that controller.
+    
+- `{id?}` → an **optional parameter** (like a record ID).
+
+- the **pattern** can include:
+
+   1️⃣ **Placeholders**  
+   2️⃣ **Literals**
+
+---
+
+## 1️⃣ **Placeholders (Route Parameters)**
+
+These are **variable parts** of the URL, written inside `{ }`.
+
+➡️ Examples:
+
+- `{controller}`
+    
+- `{action}`
+    
+- `{id}`
+    
+
+ **What they do:**
+
+- **Capture part of the URL** and map it to a value.
+    
+- Are **dynamic**—they change based on what’s in the URL.
+    
+
+---
+
+**Example pattern:**
+
+``` csharp
+`"{controller}/{action}/{id?}"`
+```
+**URL:** `/Products/Details/5`
+
+|Part of the URL|Placeholder it matches|
+|---|---|
+|`Products`|`{controller}`|
+|`Details`|`{action}`|
+|`5`|`{id}`|
+
+---
+
+## 2️⃣ **Literals (Fixed Parts)**
+
+These are **hardcoded parts** of the pattern. They are **static** and must **exactly match** part of the URL.
+
+➡️ Examples:
+
+- `shop`
+    
+- `products`
+    
+- `api`
+    
+
+ **What they do:**
+
+- Must **be present in the URL** exactly as written.
+    
+- Are **not dynamic**—if the literal doesn't match, the route won’t match.
+---
+To enable routing, you need to call:
+
+``` csharp
+app.UseRouting();
+```
+
+This **adds the routing middleware** to the pipeline. It tells ASP.NET Core:
+
+> “We are going to process incoming URLs and match them to routes.”
+
+Without `UseRouting()`, **no routing will work.**
+
+- #### then We can customize our Routing 
+- Example :
+At Program .cs
+``` csharp
+app.MapControllerRoute("Route2", "R2",
+              new { controller = "Route", action = "Method2" }
+   );
+```
+
+At Route Controller
+``` csharp
+   public IActionResult Method2()
+   {
+       return Content("M2");
+   }
+```
+
+
+The **first parameter** of `MapControllerRoute()` is a **name for the route**. In this case, `"Route2"` is simply a **name** for the route being defined , <span style="color:gold"> it must be unique.</span>
+### Here's how it breaks down:
+
+1. **`"Route2"`** – This is the **name** of the route. It’s an identifier that you can use to reference or manage this route later, but it **doesn’t affect the URL matching** directly. It's mainly for **internal reference**.
+    
+2. **`"R2"`** – This is the **URL pattern** that will be used to match incoming requests. So, any request to `/R2` will be mapped to this route.
+    
+3. **`new { controller = "Route", action = "Method2" }`** – This part defines the **controller** and **action** that will be invoked when the route is matched:
+    
+    - **Controller:** `RouteController`
+        
+    - **Action:** `Method2`
+        
+4. We can Directly Write for the URL `/R2/` then Will go to Wanted Method 
+### **How Does It Work?**
+
+- When someone visits `/R2` in the browser, this route is triggered.
+
+- The request will then be directed to the **`RouteController`** and will invoke the **`Method2`** action inside that controller.
+
+
+- if the method receives an attribute like :
+``` csharp
+   public IActionResult Method2(string name)
+   {
+       return Content("M2");
+   }
+```
+we use :
+``` lua
+/R2?name=ali
+```
+- attribute must be sane name as called in url 
+
+- We Can Add constrains like :
+
+| **Constraint** | **Description**                                                         | **Example**                         |
+| -------------- | ----------------------------------------------------------------------- | ----------------------------------- |
+| alpha          | Matches uppercase or lowercase Latin alphabet characters (a-z, A-Z)     | `{x:alpha}`                         |
+| bool           | Matches a Boolean value.                                                | `{x:bool}`                          |
+| datetime       | Matches a **DateTime** value.                                           | `{x:datetime}`                      |
+| decimal        | Matches a decimal value.                                                | `{x:decimal}`                       |
+| double         | Matches a 64-bit floating-point value.                                  | `{x:double}`                        |
+| float          | Matches a 32-bit floating-point value.                                  | `{x:float}`                         |
+| guid           | Matches a GUID value.                                                   | `{x:guid}`                          |
+| int            | Matches a 32-bit integer value.                                         | `{x:int}`                           |
+| length         | Matches a string with the specified length or within a specified range. | `{x:length(6)}`, `{x:length(1,20)}` |
+| long           | Matches a 64-bit integer value.                                         | `{x:long}`                          |
+| max            | Matches an integer with a maximum value.                                | `{x:max(10)}`                       |
+| maxlength      | Matches a string with a maximum length.                                 | `{x:maxlength(10)}`                 |
+| min            | Matches an integer with a minimum value.                                | `{x:min(10)}`                       |
+| minlength      | Matches a string with a minimum length.                                 | `{x:minlength(10)}`                 |
+| range          | Matches an integer within a range of values.                            | `{x:range(10,50)}`                  |
+| regex          | Matches a regular expression.                                           | `{x:regex(^\d{3}-\d{3}-\d{4}$)}`    |
+- like :
+``` csharp
+app.MapControllerRoute("Route2", "R2/{name}/{age:int}",
+              new { controller = "Route", action = "Method2" }
+   );
+```
+
+- makes third segment name must be same for for method attribute 
+    like :
+``` csharp
+ public IActionResult Method2(string name)
+ {
+     return Content("M2");
+ }
+```
+
+``` csharp
+app.MapControllerRoute("Route2", "R2/{name}",
+              new { controller = "Route", action = "Method2" }
+   );
+```
+- Will pass attribute value by `/name`
+
+- We can also make segment is optional like 
+``` csharp
+app.MapControllerRoute("Route2", "R2/{age:int}/{name?}",
+              new { controller = "Route", action = "Method2" }
+   );
+```
+
+- we should make optional segment the last segment 
+- we can make default value for the segment by :
+``` csharp
+app.MapControllerRoute("Route2", "R2/{name=ali}",
+              new { controller = "Route", action = "Method2" }
+   );
+```
+
+- ## ***Note :***
+- Most Customized Route must be first then we put default Route
+- 
+``` csharp
+app.MapControllerRoute("Route2", "R2/{controller}/{action}");
+```
+- Here We can use Controller , Action For URL , it is the default for Microsoft so , We can put it at last 
+---
+## 2- _**Attribute-based routing**_ (also called **attribute routing**)
+
+1- before the Action 
+``` csharp
+   [Route("M1/{age:int}/{name?}",Name ="R1")]
+   public IActionResult Method1()//string name,int age)
+   {
+       return Content("M1");
+   }
+```
+
+1- it takes the Routed URL , and name of Route
+
+- ## Note:
+- _**Attribute-based routing_ : used Most For API
+- 2- ***Convention-based routing*** : Used Most For MVC   
+----
+- ## How Can I Make Deployment 
+- 1- Right Click on project name 
+- 2- choose publish 
+- 3- choose Folder if we don't Have Azure or Docker 
+- ![[Pasted image 20250507011418.png]]
+- 4- then choose location 
+- 5- choose setting 
+- ![[Pasted image 20250507010701.png]]
+- ![[Pasted image 20250507010740.png]]
+- 6- We have 2 options :
+	- 1- Framework-dependent :if host has the runtime
+	- 2- Self-contained: download all runtime requirement if host does not have the runtime 
+- 7-click save .
+- -----
+- ## We Finished （*＾-＾*）
