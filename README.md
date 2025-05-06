@@ -953,7 +953,7 @@ Validation is Done at 3 layers :
 - 2-Controller
 - 3-View
 
-<img src="img/validation.png" alt="Screenshot" width="400"/>
+<img src="img/validation.png" alt="Screenshot" width="1000"/>
 
 ### ***Another Example***
 
@@ -1052,9 +1052,7 @@ public class UserViewModel
      return View("View1", std);
  }
 ```
-
-![[Pasted image 20250320223212.png]]
-
+<img src="img/custom.png" alt="Screenshot" width="500"/>
 
 - ==Note That It is Server-Side== 
 ### **When Should You Use It ?**
@@ -1256,7 +1254,8 @@ public IActionResult check(string Username ,string Email ,string Address)
     
 3. **Do nothing and immediately call the next middleware.**
 
-![[Pasted image 20250422170206.png]]
+<img src="img/Middleware.png" alt="Screenshot" width="500"/>
+
 #### Note that :
 ###### M1 -> M2 -> M3 -> M4 -> M3 -> M2 -> M1 
 
@@ -2076,7 +2075,8 @@ public IActionResult Details([FromServices] IEmployeeRepository employeeReposito
 ```
 - When you use **Action Injection** in a controller, the **[FromServices]** attribute tells the Dependency Injection (DI) system to **inject the service directly into the action parameter**, ignoring any model binding that might otherwise be used.
 - examples :
-     ![[Pasted image 20250427142116.png]]
+    <img src="img/form.png" alt="Screenshot" width="1000"/>
+
  
 | Attribute               | Where the value comes from                  | Example                                            |
 | ----------------------- | ------------------------------------------- | -------------------------------------------------- |
@@ -2218,7 +2218,8 @@ public class EmployeeRepository
 #                                   Day 8
 
 ##  1 - Filters 
-![[Pasted image 20250501142533.png]]
+<img src="img/filter.png" alt="Screenshot" width="1000"/>
+
   -  1️- **A filter is a block of code that executes before, after, or around the execution of an action method, result, or other parts of the request pipeline.**
 
  - 2️- **Filters are used to reduce repetitive code by handling cross-cutting concerns such as logging, caching, authorization, or error handling in a centralized way.**
@@ -2231,7 +2232,8 @@ public class EmployeeRepository
 ***Note*** :  <span style="color:gold">Filters</span> is at <span style="color:gold"> MVC</span> Level,  Unlike  <span style="color:gold">MiddleWares </span>is that At <span style="color:gold">Application Level</span>
 
 ***Built-in Filters*** :
-![[Pasted image 20250430171632.png]]
+<img src="img/builtin.png" alt="Screenshot" width="1000"/>
+
 
 ##  1️-  **Authorization Filters**
 
@@ -2467,7 +2469,8 @@ At Program.cs
 | 4️⃣  | After View is rendered and sent | Cleanup, log completion, post-processing   | `OnResultExecuted` (in `IResultFilter` / `IAsyncResultFilter`)  |
 
 ---
-![[Pasted image 20250501152956.png]]
+<img src="img/identity.png" alt="Screenshot" width="1000"/>
+
 - Sometimes We need to add layer between Repository and model called Service to make mapping 
 
 - **We Need To Know What Are Identity Classes?** 
@@ -2740,16 +2743,18 @@ This code **registers ASP.NET Core Identity** in the **dependency injection (DI)
 -------
 
 - Instead Of Build The View From Scratch We Have Built-in Template We Can Use  
-![[Pasted image 20250501174236.png]]
+<img src="img/razor1.png" alt="Screenshot" width="1000"/>
 
 
 
-![[Pasted image 20250501174359.png]]
+<img src="img/razor2" alt="Screenshot" width="1000"/>
+
 
 I chose the Template and the ViewModel That will apply for it 
 
 ---
-![[Pasted image 20250501142022.png]]
+<img src="img/summary.png" alt="Screenshot" width="1000"/>
+
 - the steps that is  listed form the core sequence to implement an authentication module using **ASP.NET Core Identity with Entity Framework Core**. However, to ensure your authentication module is complete and functional, :
 
     - 1. Install package Identity "Microsoft.AspNetCore.Identity.EntityFrameworkCore"
@@ -3136,7 +3141,8 @@ If you assign a role to a user **after they’ve already logged in,** the user w
     
 - ✅ Just **check the option "Create as a partial view"** (in Visual Studio, for example).
 
- - ![[Pasted image 20250506164458.png]]
+ - <img src="img/select.png" alt="Screenshot" width="1000"/>
+
  ---
  - it is recommended to start partial view with " _ " like `_EmoCard.cshtml
 
@@ -3246,7 +3252,8 @@ return PartialView("_EmpCard",EmployeeRepository.GetById(id));//Model=Null
 
 
 ---
- ![[Pasted image 20250506173903.png]]
+<img src="img/Ajax.png" alt="Screenshot" width="1000"/>
+
  
  - ###  AJAX Request
   - it's used to update part of the page without reloading the whole thing.
