@@ -3733,11 +3733,11 @@ app.MapControllerRoute("Route2", "R2/{controller}/{action}");
 - 1- Right Click on project name 
 - 2- choose publish 
 - 3- choose Folder if we don't Have Azure or Docker 
-- img src="img/folder.png" alt="Screenshot" width="1000"/>
+- <img src="img/folder.png" alt="Screenshot" width="1000"/>
 - 4- then choose location 
 - 5- choose setting 
-- img src="img/Setting.png" alt="Screenshot" width="1000"/>
-- img src="img/framework.png" alt="Screenshot" width="1000"/>
+- <img src="img/Setting.png" alt="Screenshot" width="1000"/>
+- <img src="img/framework.png" alt="Screenshot" width="1000"/>
 - 6- We have 2 options :
 	- 1- Framework-dependent :if host has the runtime
 	- 2- Self-contained: download all runtime requirement if host does not have the runtime 
