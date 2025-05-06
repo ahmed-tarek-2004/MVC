@@ -2574,7 +2574,12 @@ public class ApplicationUser : IdentityUser
      {
 
      }
-}
+     // Required
+     protected override void OnModelCreating(ModelBuilder modelBuilder)
+     {
+        base.OnModelCreating(modelBuilder); 
+     }
+  }
 
 ```
 
@@ -2711,7 +2716,9 @@ await signInManager.SignInAsync(appUser, false);
 ``` csharp
  builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ITIContext>();
 ```
-
+-  this line **adds Identity services** with your user (`ApplicationUser`) and role (`IdentityRole`).
+    
+- It also **registers UserManager, SignInManager, RoleManager, etc.** for **Dependency Injection** automatically.
 ## **What Does It Mean?**
 
 This code **registers ASP.NET Core Identity** in the **dependency injection (DI) container** and tells it:
@@ -2804,7 +2811,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
     
     - It **verifies** it (e.g., checks if the token or cookie is valid).
         
-    - If valid 👉 it **fills `HttpContext.User`** with the user info (like username, roles, claims, etc.).
+    - If valid ==> it **fills `HttpContext.User`** with the user info (like username, roles, claims, etc.).
         
 - If **nothing is found** or it's invalid :
     
@@ -2909,14 +2916,12 @@ bool found=  await userManager.CheckPasswordAsync(appUser, userViewModel.Passwor
     -   The `User` property represents the **current authenticated user**. It contains   information about the user's identity and claims (like roles, email, etc.), If No Authentication Found it Becomes ***`Null`*** 
       
     - **Inheritance**: `User` is inherited from `ControllerBase` (which is the base class for controllers).
+    
       - ###  **`ClaimsPrincipal`**:
-
        In ASP.NET Core, **`ClaimsPrincipal`** is the class used to represent the **current authenticated user** and contains all the claims associated with that user. The claims provide key information about the user, such as their roles, email address, and any other custom attributes related to their identity.
 
        - **`ClaimsPrincipal`** provides:
-    
        1- **Identity**: Basic information about the user (like username).
-        
        2- **Claims**: A collection of ***<span style="color:gold">key-value pairs</span>*** containing the user's information, such as roles, permissions, email, etc.
     
     ***Example :***
@@ -2955,3 +2960,154 @@ bool found=  await userManager.CheckPasswordAsync(appUser, userViewModel.Passwor
          Claim AddressClaim = User.Claims.FirstOrDefault(c => c.Type == "UserAddress");
 ```
    
+***Example***:
+1- Identity :
+```lua
+User.Identity.IsAuthenticated;
+User.Identity.Name;
+User.Identity.AuthenticationType;
+```
+
+
+2- Claims :
+
+|Claim Type|ClaimTypes Constant|Example Value|
+|---|---|---|
+|Name|`ClaimTypes.Name`|`jdoe`|
+|Name Identifier (User ID)|`ClaimTypes.NameIdentifier`|`12345`|
+|Email|`ClaimTypes.Email`|`jdoe@example.com`|
+|Role|`ClaimTypes.Role`|`Admin`|
+|Given Name|`ClaimTypes.GivenName`|`John`|
+|Surname|`ClaimTypes.Surname`|`Doe`|
+|Date of Birth|`ClaimTypes.DateOfBirth`|`1990-01-01`|
+|Gender|`ClaimTypes.Gender`|`Male`|
+|Mobile Phone|`ClaimTypes.MobilePhone`|`+1234567890`|
+|Country|`ClaimTypes.Country`|`US`|
+|Locality (City)|`ClaimTypes.Locality`|`New York`|
+|Street Address|`ClaimTypes.StreetAddress`|`123 Main St`|
+|Postal Code|`ClaimTypes.PostalCode`|`10001`|
+|Website|`ClaimTypes.Webpage`|`https://example.com`|
+|Authentication Method|`ClaimTypes.AuthenticationMethod`|`Password`|
+|Security Stamp (if using ASP.NET Identity)|_Custom, often named "AspNet.Identity.SecurityStamp"_|(GUID)|
+
+- ## How Can We Add Custom Claims 
+1- Make Collection of Claims 
+2- Add needed Claim to created collection 
+3- use <span style="color:gold">SignInWithClaimsAsync</span> and add Appuser , boolen for long term cookie and collection of claims
+
+``` csharp
+ List<Claim> Claims = new List<Claim>();
+ Claims.Add(new Claim("UserAddress",appUser.Address));
+
+ await signInManager.SignInWithClaimsAsync(appUser, userViewModel.RememberMe, Claims);
+```
+
+- #### To get it :
+``` csharp
+var userAddress = User.FindFirst("UserAddress")?.Value;
+//or
+Claim AddressClaim = User.Claims.FirstOrDefault(c => c.Type == "UserAddress");
+
+```
+
+---
+- ## How Can Add Role
+- To Add Role to DataBase We Use <span style="color:gold">IdentityRole</span> so we Make an inject for it at Controller 
+- then :
+``` csharp
+ IdentityRole role = new IdentityRole();
+ role.Name = "Admin";
+ IdentityResult result= await roleManager.CreateAsync(role);
+ if (result.Succeeded == true)
+ {
+     ViewBag.sucess = true;
+     return View("AddRole");
+ }
+
+  foreach (var item in result.Errors)
+  {
+      ModelState.AddModelError("", item.Description);
+  }
+  //code
+```
+
+- ## Add Role To User
+- 
+``` csharp 
+ IdentityResult result= 
+ await userManager.CreateAsync(appUser,UserViewModel.Password);
+ if (result.Succeeded)
+ {
+     //assign to role
+     await userManager.AddToRoleAsync(appUser, "Admin");
+     // or
+     await userManager.AddToRolesAsync(appUser, new[] { "Admin", "Manager" });
+     //Cookie
+     await signInManager.SignInAsync(appUser, false);
+     return RedirectToAction("Index", "Department");
+ }
+```
+
+- If you want to **restrict access** so that **only users in the `Admin` role** can access a controller or an action, you use:
+``` csharp
+[Authorize(Roles = "Admin")]
+public class AdminController : Controller
+{
+    public IActionResult Dashboard()
+    {
+        return View();
+    }
+}
+```
+
+- To check if User Has a specific Role
+``` csharp
+if (User.IsInRole("Admin")){}
+```
+
+**When you assign a role to a user (e.g., with `AddToRoleAsync`):**
+
+-  A new record is created in the `AspNetUserRoles` table.
+    
+-  This table acts as a **join table** between:
+    
+    - `AspNetUsers` (your users)
+        
+    - `AspNetRoles` (your roles)
+        
+
+ So , it **creates a foreign key relationship** between the user and the role.
+
+---
+
+ **At login time:**
+
+- The system **queries that table** to find out which roles the user belongs to (following those foreign key links).
+    
+- It **creates claims for each role** and **loads them into the user’s identity (ClaimsPrincipal).**
+    
+- Those claims are **stored in the authentication cookie** (or token).
+    
+- - **Roles → Claims → ClaimsPrincipal → User.**
+  
+- On every request:
+    - The `ClaimsPrincipal` is rebuilt from the cookie/token and made available via `User` in controllers.
+---
+ 
+ **After login:**
+ 
+- When you call:
+  ``` csharp
+    User.IsInRole("Admin")
+    ```
+
+- it **does NOT hit the database.**
+- Instead, it **checks the user's already-loaded claims** (from the cookie/session) to see if `"Admin"` is there.
+
+---
+**Important reminder:**  
+If you assign a role to a user **after they’ve already logged in,** the user won’t see the new role until they **log out and log in again,** unless you force the claims to refresh.
+ 
+ 
+---
+## Day 9
