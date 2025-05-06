@@ -953,7 +953,7 @@ Validation is Done at 3 layers :
 - 2-Controller
 - 3-View
 
-![[Pasted image 20250319034008.png]]
+<img src="img/validation.png" alt="Screenshot" width="400"/>
 
 ### ***Another Example***
 
