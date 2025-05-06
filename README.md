@@ -2075,7 +2075,7 @@ public IActionResult Details([FromServices] IEmployeeRepository employeeReposito
 ```
 - When you use **Action Injection** in a controller, the **[FromServices]** attribute tells the Dependency Injection (DI) system to **inject the service directly into the action parameter**, ignoring any model binding that might otherwise be used.
 - examples :
-    <img src="img/from.png" alt="Screenshot" width="1000"/>
+    <img src="img/from.png" alt="Screenshot" width="500"/>
 
  
 | Attribute               | Where the value comes from                  | Example                                            |
