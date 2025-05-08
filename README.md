@@ -169,7 +169,7 @@ public IActionResult Details(int id)
         <option>@item</option>
     }
 </select>
-
+```
 ---
 ##                                 StateManagement 
 ### **2. Data Persistence (Session, TempData, Cookies)**  
