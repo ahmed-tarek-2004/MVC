@@ -3445,7 +3445,7 @@ To implement Ajax :
 </script>
 ```
 
-1- We make a div with id=""div1" to get the partial view on it 
+1- We make a div with id="div1" to get the partial view on it 
 2- to use client side we used JS and Jquery , so we uploaded `Jquery`
 3- We used ` event.preventDefault();` ➔ to stop the anchor tag’s default behavior** (which is to make a full-page HTTP request to the `href` URL).
 4- using Ajax Call by Jquery by  a popular ready code:
