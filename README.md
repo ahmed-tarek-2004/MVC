@@ -3741,7 +3741,7 @@ we use :
 ``` lua
 /R2?name=ali
 ```
-- attribute must be sane name as called in url 
+- attribute must be same name as called in url 
 
 - We Can Add constrains like :
 
