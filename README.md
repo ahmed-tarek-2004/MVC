@@ -47,6 +47,47 @@ public IActionResult Mix(dynamic id)
 ***Note :***
 ***`IActionResult`*** is an **interface** in ASP.NET Core MVC that represents the result of an action method in a controller. It allows you to return different types of responses, such as views, JSON data, HTTP status codes, or redirections.
 
+#### How o Write Code At View :
+```csharp
+<h1>Hellow World From First View</h1>
+<style>
+h1{
+    color:red
+}
+</style>
+<script>
+console.log("Hello");
+</script>
+<!--Razor Engin-->
+<!--Block Code-->
+@{
+    int x =10 ;
+    int y = x +10;
+
+}
+<!--Inline Statment-->
+<h2>@x</h2>
+@y
+<!--Condition statment-->
+@if (x > y){
+
+    <h2>X ggreater than y</h2>
+}
+else
+{
+    <h2>X = @x Less than y =@y</h2>
+
+}
+
+
+<!--Looping Statment-->
+@for(int i = 0; i < 10; i++)
+{
+    <li>@i</li>
+}
+
+```
+
 ---
 
 ##                    **Day 2: Data Passing Methods**  
@@ -72,6 +113,62 @@ public IActionResult Mix(dynamic id)
 3. **ViewModel (Recommended)**  
    - Create a **class** to hold all required data and pass an object to the view.
    - Strong Typed View
+   - Example :
+### At Controller
+   ``` csharp
+public IActionResult Details(int id)
+{
+    string msg = "Hello From Action";
+    int temp = 50;
+    List<string> bracnches= new List<string>();
+    
+    bracnches.Add("Assiut");
+    bracnches.Add("Alex");
+    bracnches.Add("Cario");
+    //Aditional info send to View from Action
+    ViewData["Msg"] = msg;
+    ViewData["Temp"] = temp;
+    ViewData["brch"] = bracnches;
+    
+   
+    ViewData["Color"] = "Blue";
+    ViewBag.Color = "REd";
+    //ViewData.Model=empMo
+    Employee EmpMOdel= context.Employee.FirstOrDefault(e => e.Id == id);
+    return View("Details", EmpMOdel);
+}
+     ```
+
+### At View:
+``` csharp
+@model Employee
+
+@{
+    ViewData["Title"] = "ITI Details";
+}
+
+<h1>Details</h1>
+
+<h2 style="color:@ViewBag.Color">@Model.Name</h2>
+<h1>@ViewData["Msg"]</h1>
+<h2>@(int.Parse(ViewData["Temp"].ToString())-10)</h2>
+
+<h2>@(ViewBag.Temp - 10)</h2>
+
+
+<select class="form form-control">
+    @foreach (var item in (List<string>)ViewData["brch"])
+    {
+        <option>@item</option>
+    }
+</select>
+
+<select class="form form-control">
+    @foreach (var item in ViewBag.brch)
+    {
+        <option>@item</option>
+    }
+</select>
 
 ---
 ##                                 StateManagement 
