@@ -177,13 +177,13 @@ public IActionResult Details(int id)
 When a request is made, the **controller object is created and destroyed** after execution.  
 To persist data across requests or getting some data from the Object , use:  
 
-| Feature         | TempData                                                     | Session                                              | Cookies                                        |     |
-| --------------- | ------------------------------------------------------------ | ---------------------------------------------------- | ---------------------------------------------- | --- |
-| **Scope**       | Request + Next request (unless `Peek()` or `Keep()` is used) | Multiple requests during a session                   | Persistent across requests & browsers          |     |
-| **Storage**     | Stored in **Session (by default)**                           | Stored in **Server memory**                          | Stored **on the client’s browser**             |     |
-| **Lifetime**    | Expires after **one request** (unless `Keep()` is used)      | Expires **when session ends** (`IdleTimeout`)        | Expires **based on `Expires` property**        |     |
-| **Persistence** | Survives **redirects** but not full refreshes                | Survives **full refresh, redirects, and navigation** | Survives **browser restarts (if not expired)** |     |
-| **Use Case**    | Passing temporary data **between two actions**               | Storing **user-specific data** during a session      | Storing **small, persistent user preferences** |     |
+| Feature         | TempData                                                     | Session                                              | Cookies                                        |     
+| --------------- | ------------------------------------------------------------ | ---------------------------------------------------- | ---------------------------------------------- | 
+| **Scope**       | Request + Next request (unless `Peek()` or `Keep()` is used) | Multiple requests during a session                   | Persistent across requests & browsers          |     
+| **Storage**     | Stored in **Session (by default)**                           | Stored in **Server memory**                          | Stored **on the client’s browser**             |     
+| **Lifetime**    | Expires after **one request** (unless `Keep()` is used)      | Expires **when session ends** (`IdleTimeout`)        | Expires **based on `Expires` property**        |     
+| **Persistence** | Survives **redirects** but not full refreshes                | Survives **full refresh, redirects, and navigation** | Survives **browser restarts (if not expired)** |     
+| **Use Case**    | Passing temporary data **between two actions**               | Storing **user-specific data** during a session      | Storing **small, persistent user preferences** |     
 #### **1. TempData**
 - Stored temporarily between ==**two actions** (request-to-request).==
 - By default, **TempData is deleted after being read**.  
