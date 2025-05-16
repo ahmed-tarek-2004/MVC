@@ -108,7 +108,7 @@ else
    ```
    - Type is **determined at runtime** (no need for casting).
    - **Both ViewData and ViewBag** **Not Strongly Typed**  (detect to runtime errors)
-   - `ViewData` and `ViewBag` both use ==the same dictionary internally==. So you cannot have ViewData matches with the Key property name of ViewBag
+   - `ViewData` and `ViewBag` both use ==the same dictionary internally==. So - You **can** use them interchangeably, but you **cannot** use the same key separately in both without one overwriting the other.
 
 3. **ViewModel (Recommended)**  
    - Create a **class** to hold all required data and pass an object to the view.
