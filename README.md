@@ -115,7 +115,7 @@ else
    - Strong Typed View
    - Example :
 ### At Controller
-   ``` csharp
+``` csharp
 public IActionResult Details(int id)
 {
     string msg = "Hello From Action";
@@ -137,7 +137,7 @@ public IActionResult Details(int id)
     Employee EmpMOdel= context.Employee.FirstOrDefault(e => e.Id == id);
     return View("Details", EmpMOdel);
 }
-     ```
+```
 
 ### At View:
 ``` csharp
