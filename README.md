@@ -1427,14 +1427,15 @@ Output :
 ```
 
 
-1-`var app = builder.Build();`
- from here start using my Web Application Object 
+
+1-` var app = builder.Build();`
+    from here start using my Web Application Object 
 2- We use `app.Run`  last of all MiddleWares 
 3- We uses Lambda for Delegate but You can make Your own Function 
 4- Function `Next.Invoke()` is Async so we use `await` and mark the delegate as `async` to ensure the middleware completes before moving on.
 
 - ###  Bulit in MiddleWare
-   ``` csharp
+ ``` csharp
 public static void Main(string[] args)
 {
     var builder = WebApplication.CreateBuilder(args);
@@ -1466,7 +1467,7 @@ public static void Main(string[] args)
 
     app.Run();
 }
-     ```
+ ```
 
 ### Note : 
 ``` csharp
