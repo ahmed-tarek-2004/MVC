@@ -438,7 +438,7 @@ Model Binding is the process of mapping data from HTTP requests (URL, form input
         Request.RouteValues
         ```
         
-    - **RouteValues take priority** over query string parameters. If both are present, ASP.NET will use <span style="color : gold">RouteValues</span>.
+    - **RouteValues take priority** over query string parameters. If both are present, ASP.NET will use <span style="color : red">RouteValues</span>.
 
 ### Handling Collections & Objects in Query Strings
 
