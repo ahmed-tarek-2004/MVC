@@ -1130,9 +1130,12 @@ public class UserViewModel
  
 
 - **`<div asp-validation-summary="All" class="text-danger"></div>`**: Displays and gather all validation errors at the top of the form.
-- The `"All"` option shows **both model-level and property-level errors**. You can change it to:
-- `"ModelOnly"` → Displays only model-level validation errors.
-- `"None"` → Hides the validation summary (not recommended unless you use inline messages only).
+- The `"All"` option shows **both model-level and property-level errors** :
+    1- **Model-level errors** (e.g., errors added manually in the controller using- `ModelState.AddModelError("", "message")`)
+    2- **Field-specific errors** (e.g., `[Required]`, `[EmailAddress]`)
+- You can change it to:
+ `"ModelOnly"` → Displays only model-level validation errors.
+ `"None"` → Hides the validation summary (not recommended unless you use inline messages only).
 ----
 #                      ***Custom Validation Erorr***
 
