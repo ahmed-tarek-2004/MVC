@@ -2314,7 +2314,25 @@ public class EmployeeRepository
 
 - `AddDbContext` registers the `DbContext` to be injected into classes that depend on it. In other words, you cannot directly use `ITIContext` unless the class is being injected via **Dependency Injection**.
 
--  in custom validation, use the **default constructor** (`public ITIContext() : base()`), and you don't use DI to inject the context, it will work properly but it violates DI 
+-  in custom validation, use the **default constructor** (`public ITIContext() : base()`), and you don't use DI to inject the context, it will work properly but it violates DI , We apply it by :
+``` csharp
+public class UniqueEmailAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        var dbContext = (ITIContext)validationContext
+                            .GetService(typeof(ITIContext)); // uses DI
+
+        var email = value as string;
+        if (dbContext.Users.Any(u => u.Email == email))
+        {
+            return new ValidationResult("Email already exists");
+        }
+
+        return ValidationResult.Success;
+    }
+}
+```
 ---
 #                                   Day 8
 
