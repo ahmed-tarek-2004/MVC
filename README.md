@@ -2832,7 +2832,7 @@ await signInManager.SignInAsync(appUser, false);
 |Part|Meaning|
 |---|---|
 |`appUser`|The user object (of type `ApplicationUser`) you just created or fetched.|
-|`false`|This is `isPersistent`: it tells whether the **login session (cookie) should be persistent.**| 
+|`false`|This is `isPersistent`: it tells whether the **login session (cookie) should be persistent.**(The login session will end when the browser is closed.)| 
 
 ### 3- At Program.cs
 ``` csharp
