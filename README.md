@@ -3295,7 +3295,7 @@ If you assign a role to a user **after they’ve already logged in,** the user w
  
  - As we see it can easy take a Model 
  
- - #### **To include a Partial View in the Main View:
+ - #### **To include a Partial View in the Main View**:
  
 **1️⃣ Using HTML Helper:**
 ``` csharp
