@@ -2438,7 +2438,7 @@ public class LogActionFilter : Attribute, IActionFilter
     
     - The **action descriptor** (details about the action method).
         
-    - The **action parameters** (input data passed to the action).
+    - The **action parameters** (input data passed to the action). as Key Value Pair 
         
 
 ### **Typical Use Cases:**
