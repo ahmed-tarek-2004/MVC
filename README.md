@@ -2098,7 +2098,7 @@ public class EmployeeRepository:IEmployeeRepository
 | **Register** | Tell the IoC container _which classes_ to create when asked for an interface.                                    | `builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();`         |
 | **Resolve**  | Ask the IoC container _to give you an instance_ of a registered service. (Happens automatically in Controllers.) | Controller constructor parameter: `EmployeeController(IEmployeeRepository repo)` |
 | **Dispose**  | Free or clean up objects _after they finish_. This happens automatically if you use DI properly.                 | The container disposes your repository instance after the request ends.          |
-|              |                                                                                                                  |                                                                                  |
+                                                                                                                                                                                               
 
 - ##  quick summary:
 
