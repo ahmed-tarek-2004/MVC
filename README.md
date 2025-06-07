@@ -3862,4 +3862,107 @@ app.MapControllerRoute("Route2", "R2/{controller}/{action}");
 	- 2- Self-contained: download all runtime requirement if host does not have the runtime 
 - 7-click save .
 - -----
+# Notes:
+
+## 🔸 1. `[ValidateNever]`
+
+**Skips validation** but **still binds the value** from the request.
+
+### ✅ Meaning:
+
+- The model binder **sets the property**.
+    
+- The validation system **ignores** it.
+    
+
+### 🧪 Example:
+
+
+
+``` csharp
+[ValidateNever] public Category? Category { get; set; }
+```
+Even if `Category` has `[Required]` inside it, ASP.NET Core won’t validate it.
+
+### 👉 Use when:
+
+- You want to bind a property but skip validation (e.g., you load it from DB later or don’t want client to touch it).
+    
+
+---
+
+## 🔸 2. `[BindNever]`
+
+**Skips both binding and validation.**
+
+### ✅ Meaning:
+
+- The model binder will **not populate** this property at all from the incoming request.
+    
+- Therefore, **no validation** happens either.
+    
+
+### 🧪 Example:
+
+
+```csharp
+[BindNever] public Category? Category { get; set; }
+```
+
+`Category` will always remain null (or its default) unless you set it manually in code.
+
+### 👉 Use when:
+
+- You **don’t want users to send values** for this property (e.g., a computed value or sensitive property).
+    
+
+---
+
+## 🔸 3. Nullable Property (e.g., `Category?`)
+
+This is a **C# language feature**, not a validation or binding attribute.
+
+### ✅ Meaning:
+
+- The property **can have `null` as a value**.
+    
+- It affects **data model design** and **nullable reference types** (if enabled).
+    
+
+### 🧪 Example:
+
+```csharp
+public Category? Category { get; set; } // Property can be null
+```
+### 👉 Use when:
+
+- A relationship is optional (e.g., not every `Product` must have a `Category`).
+    
+- You want to represent "no value" in your data model.
+    
+
+---
+
+## 🔄 Summary Table
+
+|Feature|`[ValidateNever]`|`[BindNever]`|Nullable (`?`)|
+|---|---|---|---|
+|Skips Binding|❌ No|✅ Yes|❌ No|
+|Skips Validation|✅ Yes|✅ Yes|❌ No (unless combined with others)|
+|Allows Null|✅ Yes (if nullable)|✅ Yes (if nullable)|✅ Yes|
+|Used For|Skip validation only|Prevent user input|Optional data/model design|
+|Where Applied|ASP.NET Core model binding|ASP.NET Core model binding|C# class/property level|
+
+---
+
+### 🔧 Example Putting All Together:
+
+
+``` csharp
+public class Product {     public int Id { get; set; }    
+[Required]   
+public string Name { get; set; }   
+public int? CategoryId { get; set; } // nullable FK      [ValidateNever]     public Category? Category { get; set; } // binded, not validated      [BindNever]     public DateTime CreatedAt { get; set; } // not binded at all }
+```
+----
 - ## We Finished （*＾-＾*）
