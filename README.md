@@ -3964,5 +3964,73 @@ public class Product {     public int Id { get; set; }
 public string Name { get; set; }   
 public int? CategoryId { get; set; } // nullable FK      [ValidateNever]     public Category? Category { get; set; } // binded, not validated      [BindNever]     public DateTime CreatedAt { get; set; } // not binded at all }
 ```
+
+---
+Example on adding image on your project
+```csharp
+ public IActionResult UpSertProduct(ProductVM productvm, IFormFile? file)
+ {
+     var products = IunitOfWork.Product.Get(p => p.Title == productvm.product.Title&&p.Id!=productvm.product.Id);
+
+     if (products is not null)
+     {
+         ModelState.AddModelError("Name", "Name Must be Unique");
+     }
+     if (ModelState.IsValid)
+     {
+         string root = IWebHostEnvironment.WebRootPath;
+         if (file is not null)
+         {
+             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+             string productPath = Path.Combine(root, @"images\products");
+             if (!string.IsNullOrEmpty(productvm.product.ImgURL))
+             {
+                 string oldPath = Path.Combine(root, productvm.product.ImgURL.TrimStart('\\'));
+                 if (System.IO.File.Exists(oldPath))
+                 {
+                     System.IO.File.Delete(oldPath);
+                 }
+             }
+             using (var fileSystem = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+             {
+                 file.CopyTo(fileSystem);
+             }
+             productvm.product.ImgURL = @"\images\products\" + fileName;
+         }
+         if (productvm.product.Id == null || productvm.product.Id == 0)
+         {
+             IunitOfWork.Product.Add(productvm.product);
+             TempData["Success"] = "Product Added Successfully";
+         }
+         else
+         {
+             IunitOfWork.Product.Update(productvm.product);
+             TempData["Success"] = "Product Updated Successfully";
+         }
+         IunitOfWork.Save();
+         return RedirectToAction("Index");
+     }
+     else
+     {
+         productvm.Selects = IunitOfWork.Category.GetAll().Select(u => new SelectListItem
+         {
+             Text = u.Name,
+             Value = u.Id.ToString()
+         });
+         return View(productvm);
+     }
+
+```
+
+
+- At View :
+``` csharp
+ <input asp-for="product.ImgURL" hidden/>
+   <div class="col-2">
+      <img src="@Model.product.ImgURL" width="100%"
+           style="border-radius:5px; border:1px solid #bbb9b9" />
+  </div>
+```
+
 ----
 - ## We Finished （*＾-＾*）
