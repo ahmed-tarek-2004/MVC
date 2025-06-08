@@ -4026,6 +4026,11 @@ Example on adding image on your project
 - At View :
 ``` csharp
  <input asp-for="product.ImgURL" hidden/>
+ <div class="form-floating py-2 col-12">
+     <input type="file" name="file" class="form-control border-0 shadow" />
+     <label asp-for="product.ImgURL" class="ms-2"></label>
+     @* <span asp-validation-for="product.ImgURL" class="text-danger"></span> *@
+ </div>
    <div class="col-2">
       <img src="@Model.product.ImgURL" width="100%"
            style="border-radius:5px; border:1px solid #bbb9b9" />
