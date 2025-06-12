@@ -4038,4 +4038,61 @@ Example on adding image on your project
 ```
 
 ----
+- ## To Avoid ObjectCycling at Json
+##### **Option 1: Use `ReferenceHandler.Preserve`**
+
+In `Program.cs` (for .NET 5+ / .NET 6 / .NET 7 / .NET 8):
+
+
+```csharp
+builder.Services.AddControllers().AddJsonOptions(options => {     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve; });
+```
+
+#### ➕ What it does:
+
+- Adds `$id` and `$ref` markers in JSON to prevent infinite loops.
+    
+- Great for debugging or admin APIs.
+    
+
+---
+
+### 📌 Example of resulting JSON:
+
+```json
+{ "$id": "1",
+"name": "Product1",
+"category":{
+ "$id": "2",
+ "name": "CategoryA", 
+ "products": [{ "$ref": "1" }] } }
+```
+
+---
+
+### 🔧 **Option 2: Prevent serialization of back-references**
+
+If you **don’t need the reverse navigation** (e.g., `Category.Products`) in your API result, just ignore it in JSON:
+
+#### Option A: Use `[JsonIgnore]` on navigation property:
+
+``` csharp
+public class Category {     public int Id { get; set; }     public string Name { get; set; }      [JsonIgnore]     public ICollection<Product> Products { get; set; } }
+```
+
+#### Option B: Use `[JsonIgnore]` on the forward reference if needed.
+
+## Key Difference:
+
+| Feature             | `[JsonIgnore]`                                      | `ReferenceHandler.Preserve`                                      |
+| ------------------- | --------------------------------------------------- | ---------------------------------------------------------------- |
+| **Purpose**         | Prevents a property from being serialized at all    | Allows object cycles by adding `$id`/`$ref` markers in the JSON  |
+| **Effect**          | Skips the property during serialization             | Keeps the property but avoids infinite loops with references     |
+| **Use Case**        | You don't want a property in the JSON at all        | You need all properties but want to prevent infinite recursion   |
+| **Prevents Cycle?** | ✅ Yes (by removing one side of the loop)            | ✅ Yes (by tracking references)                                   |
+| **JSON Output**     | Clean & flat, but missing the `[JsonIgnore]`'d part | More verbose, with `$id` and `$ref` entries                      |
+| **Best for**        | Clean REST APIs without cycles                      | APIs where cycles are needed or complex graphs must be preserved |
+
+
+------------
 - ## We Finished （*＾-＾*）
