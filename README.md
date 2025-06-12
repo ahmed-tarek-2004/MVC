@@ -4045,7 +4045,10 @@ In `Program.cs` (for .NET 5+ / .NET 6 / .NET 7 / .NET 8):
 
 
 ```csharp
-builder.Services.AddControllers().AddJsonOptions(options => {     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve; });
+builder.Services.AddControllers().AddJsonOptions(options => {
+options.JsonSerializerOptions.ReferenceHandler =
+ System.Text.Json.Serialization.ReferenceHandler.Preserve;
+});
 ```
 
 #### ➕ What it does:
@@ -4077,7 +4080,12 @@ If you **don’t need the reverse navigation** (e.g., `Category.Products`) in yo
 #### Option A: Use `[JsonIgnore]` on navigation property:
 
 ``` csharp
-public class Category {     public int Id { get; set; }     public string Name { get; set; }      [JsonIgnore]     public ICollection<Product> Products { get; set; } }
+public class Category {
+  public int Id { get; set; }
+  public string Name { get; set; }
+  [JsonIgnore]
+ public ICollection<Product> Products { get; set; }
+ }
 ```
 
 #### Option B: Use `[JsonIgnore]` on the forward reference if needed.
