@@ -1,3 +1,5 @@
+## ** Before Getting Started, Be aware that The Repo is being updated with some notes over time **
+
 ## **Day 1: Routing & Action Results**  
 
 #### **1. Routing and Endpoints**  
@@ -3843,7 +3845,6 @@ app.MapControllerRoute("Route2", "R2/{controller}/{action}");
 ```
 
 1- it takes the Routed URL , and name of Route
-
 - ## Note:
 - _**Attribute-based routing_ : used Most For API
 - 2- ***Convention-based routing*** : Used Most For MVC   
@@ -3861,7 +3862,8 @@ app.MapControllerRoute("Route2", "R2/{controller}/{action}");
 	- 1- Framework-dependent :if host has the runtime
 	- 2- Self-contained: download all runtime requirement if host does not have the runtime 
 - 7-click save .
-- -----
+--------
+--------
 # Notes:
 
 ## 🔸 1. `[ValidateNever]`
@@ -3966,7 +3968,8 @@ public int? CategoryId { get; set; } // nullable FK      [ValidateNever]     pub
 ```
 
 ---
-Example on adding image on your project
+---
+### Example on adding image on your project
 ```csharp
  public IActionResult UpSertProduct(ProductVM productvm, IFormFile? file)
  {
