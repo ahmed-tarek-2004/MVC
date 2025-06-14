@@ -1,4 +1,4 @@
-## ** Before Getting Started, Be aware that The Repo is being updated with some notes over time **
+## **Before Getting Started, Be aware that The Repo is being updated with some notes over time**
 
 ## **Day 1: Routing & Action Results**  
 
