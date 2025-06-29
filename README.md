@@ -4186,7 +4186,7 @@ return View(product);     }
 ```csharp
 public class ProductRatingViewComponent : ViewComponent 
 { 
-public IViewComponentResult Invoke(int productId)  {       
+public Task<IViewComponentResult> Invoke(int productId)  {       
 var rating = _ratingService.GetRating(productId);         
 return View(rating);     
 }
