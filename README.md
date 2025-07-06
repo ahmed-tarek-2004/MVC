@@ -4210,7 +4210,96 @@ In view:
 | View + Logic together    | ✅ Yes      | ✅ Yes         |
 
 ------------
+---
+- To Get the current domain 
+```csharp
+   var domain = Request.Scheme + "://" + Request.Host.Value + "/";
+```
+-----
+----
+## Note the Diff :
+### ✅ 1. **URL (Uniform Resource Locator)**
 
+The full web address.
+
+#### 📌 Example:
+
+``` lua
+https://example.com/products/details/5?sort=price&order=asc
+```
+
+It includes:
+
+- Protocol (`https`)
+    
+- Domain (`example.com`)
+    
+- Path (`/products/details/5`)
+    
+- Query string (`?sort=price&order=asc`)
+    
+
+---
+
+### ✅ 2. **Query String**
+
+- Comes **after the `?`** in the URL.
+    
+- Contains **key-value pairs**.
+    
+- Used to **send optional parameters** to the server.
+    
+
+#### 📌 Example:
+
+
+```sql
+?sort=price&order=asc
+```
+Which means:
+
+```csharp
+Request.Query["sort"] => "price" Request.Query["order"] => "asc"
+```
+
+---
+
+### ✅ 3. **Segment**
+
+- Part of the **path** (between slashes `/`).
+    
+- Often used in **RESTful routing** to identify resources.
+    
+
+#### 📌 Example:
+
+In this path:
+``` csharp
+/products/details/5
+```
+The segments are:
+
+```csharp
+Segment 0: "products" Segment 1: "details" Segment 2: "5"
+```
+
+In ASP.NET:
+
+```csharp
+var segments = Request.Path.Value.Split('/');
+```
+
+---
+
+### 🧠 Summary Table:
+
+| Term             | Location Example                       | Purpose                         |
+| ---------------- | -------------------------------------- | ------------------------------- |
+| **URL**          | `https://site.com/products/5?sort=asc` | Full address                    |
+| **Segment**      | `products`, `5` from `/products/5`     | Route parts (e.g., resource ID) |
+| **Query String** | `?sort=asc`                            | Optional filters or options     |
+
+---
 - ## We Finished （*＾-＾*）
 
 - ###  Connect with me :- 
