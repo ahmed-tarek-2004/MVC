@@ -890,7 +890,8 @@ Without CSRF protection, an attacker could trick a logged-in user into unknowing
 - Changing an account password
 - Deleting a user account
 
-This attribute ensures that **every POST request contains a valid anti-forgery token**, making it harder for attackers to forge requests.
+This attribute ensures that **every POST request contains a valid anti-forgery token**, making it harder for attackers to forge requests ,used For <span style="color:green">non-Get Request</span> 
+
 
 ---
 
