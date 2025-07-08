@@ -1144,6 +1144,8 @@ public class UserViewModel
 
 `ModelState.AddModelError` is a method in ASP.NET Core and ASP.NET MVC that allows you to manually add validation errors to the `ModelState` dictionary. This is useful when you want to return custom validation errors in your controllers. 
 
+- Note:  `ModelState.AddModelError` makes `ModelState.IsValid` is **false**;
+
 #### 1- `ModelState.AddModelError("FieldName", "Custom error message.");`
 
 ``` csharp
