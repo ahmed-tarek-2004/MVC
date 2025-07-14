@@ -1473,6 +1473,41 @@ public static void Main(string[] args)
     app.Run();
 }
  ```
+- Make Own Function not lambda :
+1- Create Class 
+```csharp
+  public class Logger
+  {
+      private readonly RequestDelegate Next;
+
+      private readonly ILogger<Logger> _logger;
+      public Logger(RequestDelegate requestDelegate, ILogger<Logger> logger)
+      {
+          Next = requestDelegate;
+          _logger = logger;
+      }
+
+      public async Task Invoke(HttpContext context)
+      {
+          var time = new Stopwatch();
+          time.Start();
+         await Next(context);
+          time.Stop();
+          _logger.LogInformation($"for {context.Request.Path},Time Takes : {time.ElapsedMilliseconds}");
+      }
+  }
+```
+2- At Program.cs
+``` csharp
+app.UseStaticFiles();
+app.UseCors("MyPolicy");// before app.UseRouting
+app.UseAuthentication(); //
+app.UseAuthorization();
+app.MapControllers();
+app.UseMiddleware<Logger>();//<=
+```
+
+#### `Next` IS A RequestDelegate Type Takes HttpContext to go to Next Delegate
 
 ### Note : 
 ``` csharp
