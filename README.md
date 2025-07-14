@@ -1474,6 +1474,7 @@ public static void Main(string[] args)
 }
  ```
 - Make Own Function not lambda :
+
 1- Create Class 
 ```csharp
   public class Logger
@@ -1507,7 +1508,7 @@ app.MapControllers();
 app.UseMiddleware<Logger>();//<=
 ```
 
-#### `Next` IS A RequestDelegate Type Takes HttpContext to go to Next Delegate
+#### `Next` Is A RequestDelegate Type Takes HttpContext to go to Next Delegate
 
 ### Note : 
 ``` csharp
