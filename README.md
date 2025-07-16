@@ -4339,6 +4339,128 @@ var segments = Request.Path.Value.Split('/');
 | **Query String** | `?sort=asc`                            | Optional filters or options     |
 
 ---
+## ✅ What is an Authorization Policy?
+
+An **Authorization Policy** in ASP.NET Core is a **named set of rules** that define who is allowed to access a resource (like a controller or API endpoint).
+
+### 🔑 A policy can check:
+
+- **Roles**
+    
+- **Claims**
+    
+- **Custom logic** (e.g. check both role and department)
+    
+
+---
+
+## 🔹 Basic Policy with Roles
+
+### ✅ Define the policy (in `Program.cs` or `Startup.cs`):
+
+
+
+```csharp
+builder.Services.AddAuthorization(options => {     options.AddPolicy("AdminOnly", policy =>         policy.RequireRole("Admin")); });
+```
+
+### ✅ Use it in a controller:
+
+
+
+``` csharp
+[Authorize(Policy = "AdminOnly")] 
+public IActionResult GetAdminData() {     return Ok("Only Admins can access this"); }
+```
+
+
+---
+
+## 🔹 Policy with Multiple Roles
+
+csharp
+
+CopyEdit
+
+`builder.Services.AddAuthorization(options => {     options.AddPolicy("ManagerOrAdmin", policy =>         policy.RequireRole("Manager", "Admin")); });`
+
+
+``` csharp
+[Authorize(Policy = "ManagerOrAdmin")] public IActionResult GetSecureData() {     return Ok("Admins or Managers can access this"); }
+```
+
+---
+
+## 🔹 Policy with a Specific Claim
+
+Let’s say your JWT token includes:
+
+
+```json
+{   "Department": "HR" }
+```
+
+Then define a policy like:
+
+``` csharp
+builder.Services.AddAuthorization(options => {     options.AddPolicy("HROnly", policy =>         policy.RequireClaim("Department", "HR")); });
+```
+
+And use it:
+
+
+
+```csharp
+[Authorize(Policy = "HROnly")] public IActionResult GetHRData() {     return Ok("Only HR department members can access"); }
+```
+---
+
+## 🔹 Custom Policy (with logic)
+
+You can write a **custom handler** if you want more control.
+
+### 1. Create a requirement:
+
+
+```csharp
+public class MinimumAgeRequirement : IAuthorizationRequirement {     public int MinimumAge { get; }     public MinimumAgeRequirement(int minimumAge) => MinimumAge = minimumAge; }
+```
+
+### 2. Create a handler:
+
+```csharp
+public class MinimumAgeHandler : AuthorizationHandler<MinimumAgeRequirement> {     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MinimumAgeRequirement requirement)     {         var birthDateClaim = context.User.FindFirst(c => c.Type == "BirthDate");         if (birthDateClaim == null)             return Task.CompletedTask;          var birthDate = DateTime.Parse(birthDateClaim.Value);         var userAge = DateTime.Today.Year - birthDate.Year;          if (userAge >= requirement.MinimumAge)         {             context.Succeed(requirement);         }          return Task.CompletedTask;     } }
+```
+
+### 3. Register everything:
+
+
+```csharp
+builder.Services.AddSingleton<IAuthorizationHandler, MinimumAgeHandler>();  builder.Services.AddAuthorization(options => {     options.AddPolicy("AtLeast18", policy =>         policy.Requirements.Add(new MinimumAgeRequirement(18))); });
+```
+
+### 4. Use it:
+
+
+
+```csharp
+[Authorize(Policy = "AtLeast18")] public IActionResult AdultOnlyContent() {     return Ok("18+ users only"); }
+```
+
+---
+
+## 🧠 Summary Table
+
+|Type|Example Code|Checks|
+|---|---|---|
+|Role-based|`RequireRole("Admin")`|Role|
+|Multi-role|`RequireRole("Admin", "Manager")`|Role|
+|Claim-based|`RequireClaim("Department", "HR")`|Claim|
+|Custom logic|Use `IAuthorizationHandler`|Any logic|
+
+---
+---
+
 - ## We Finished （*＾-＾*）
 
 - ###  Connect with me :- 
