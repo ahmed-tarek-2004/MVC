@@ -4378,11 +4378,9 @@ public IActionResult GetAdminData() {     return Ok("Only Admins can access this
 
 ## 🔹 Policy with Multiple Roles
 
-csharp
-
-CopyEdit
-
-`builder.Services.AddAuthorization(options => {     options.AddPolicy("ManagerOrAdmin", policy =>         policy.RequireRole("Manager", "Admin")); });`
+```csharp 
+builder.Services.AddAuthorization(options => {     options.AddPolicy("ManagerOrAdmin", policy =>         policy.RequireRole("Manager", "Admin")); });
+```
 
 
 ``` csharp
