@@ -4361,7 +4361,10 @@ An **Authorization Policy** in ASP.NET Core is a **named set of rules** that def
 
 
 ```csharp
-builder.Services.AddAuthorization(options => {     options.AddPolicy("AdminOnly", policy =>         policy.RequireRole("Admin")); });
+builder.Services.AddAuthorization(options =>
+{     options.AddPolicy("AdminOnly", policy =>
+       policy.RequireRole("Admin"));
+});
 ```
 
 ### ✅ Use it in a controller:
@@ -4370,7 +4373,10 @@ builder.Services.AddAuthorization(options => {     options.AddPolicy("AdminOnly"
 
 ``` csharp
 [Authorize(Policy = "AdminOnly")] 
-public IActionResult GetAdminData() {     return Ok("Only Admins can access this"); }
+public IActionResult GetAdminData()
+{
+  return Ok("Only Admins can access this");
+}
 ```
 
 
@@ -4379,12 +4385,20 @@ public IActionResult GetAdminData() {     return Ok("Only Admins can access this
 ## 🔹 Policy with Multiple Roles
 
 ```csharp 
-builder.Services.AddAuthorization(options => {     options.AddPolicy("ManagerOrAdmin", policy =>         policy.RequireRole("Manager", "Admin")); });
+builder.Services.AddAuthorization(options =>
+{
+ options.AddPolicy("ManagerOrAdmin", policy =>
+         policy.RequireRole("Manager", "Admin"));
+});
 ```
 
 
 ``` csharp
-[Authorize(Policy = "ManagerOrAdmin")] public IActionResult GetSecureData() {     return Ok("Admins or Managers can access this"); }
+[Authorize(Policy = "ManagerOrAdmin")]
+public IActionResult GetSecureData()
+{
+   return Ok("Admins or Managers can access this");
+}
 ```
 
 ---
@@ -4401,7 +4415,11 @@ Let’s say your JWT token includes:
 Then define a policy like:
 
 ``` csharp
-builder.Services.AddAuthorization(options => {     options.AddPolicy("HROnly", policy =>         policy.RequireClaim("Department", "HR")); });
+builder.Services.AddAuthorization(options =>
+ {
+ options.AddPolicy("HROnly", policy =>
+        policy.RequireClaim("Department", "HR"));
+});
 ```
 
 And use it:
@@ -4409,7 +4427,11 @@ And use it:
 
 
 ```csharp
-[Authorize(Policy = "HROnly")] public IActionResult GetHRData() {     return Ok("Only HR department members can access"); }
+[Authorize(Policy = "HROnly")]
+public IActionResult GetHRData()
+{
+     return Ok("Only HR department members can access");
+}
 ```
 ---
 
@@ -4421,20 +4443,43 @@ You can write a **custom handler** if you want more control.
 
 
 ```csharp
-public class MinimumAgeRequirement : IAuthorizationRequirement {     public int MinimumAge { get; }     public MinimumAgeRequirement(int minimumAge) => MinimumAge = minimumAge; }
+public class MinimumAgeRequirement : IAuthorizationRequirement
+{
+  public int MinimumAge { get; }
+  public MinimumAgeRequirement(int minimumAge) => MinimumAge = minimumAge;
+}
 ```
 
 ### 2. Create a handler:
 
 ```csharp
-public class MinimumAgeHandler : AuthorizationHandler<MinimumAgeRequirement> {     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MinimumAgeRequirement requirement)     {         var birthDateClaim = context.User.FindFirst(c => c.Type == "BirthDate");         if (birthDateClaim == null)             return Task.CompletedTask;          var birthDate = DateTime.Parse(birthDateClaim.Value);         var userAge = DateTime.Today.Year - birthDate.Year;          if (userAge >= requirement.MinimumAge)         {             context.Succeed(requirement);         }          return Task.CompletedTask;     } }
+public class MinimumAgeHandler : AuthorizationHandler<MinimumAgeRequirement>
+{
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MinimumAgeRequirement requirement)
+    {
+         var birthDateClaim = context.User.FindFirst(c => c.Type == "BirthDate");
+        if (birthDateClaim == null)
+             return Task.CompletedTask;
+        var birthDate = DateTime.Parse(birthDateClaim.Value);
+        var userAge = DateTime.Today.Year - birthDate.Year;
+        if (userAge >= requirement.MinimumAge)
+         {
+             context.Succeed(requirement);
+         }          return Task.CompletedTask;
+    }
+}
 ```
 
 ### 3. Register everything:
 
 
 ```csharp
-builder.Services.AddSingleton<IAuthorizationHandler, MinimumAgeHandler>();  builder.Services.AddAuthorization(options => {     options.AddPolicy("AtLeast18", policy =>         policy.Requirements.Add(new MinimumAgeRequirement(18))); });
+builder.Services.AddSingleton<IAuthorizationHandler, MinimumAgeHandler>();
+builder.Services.AddAuthorization(options =>
+{
+     options.AddPolicy("AtLeast18", policy =>
+         policy.Requirements.Add(new MinimumAgeRequirement(18)));
+});
 ```
 
 ### 4. Use it:
@@ -4442,7 +4487,11 @@ builder.Services.AddSingleton<IAuthorizationHandler, MinimumAgeHandler>();  buil
 
 
 ```csharp
-[Authorize(Policy = "AtLeast18")] public IActionResult AdultOnlyContent() {     return Ok("18+ users only"); }
+[Authorize(Policy = "AtLeast18")]
+ public IActionResult AdultOnlyContent()
+ {
+   return Ok("18+ users only");
+ }
 ```
 
 ---
