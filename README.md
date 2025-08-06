@@ -2520,6 +2520,53 @@ public class LogActionFilter : Attribute, IActionFilter
 
 ***Note :***
 - if Used one method of them, don't make the other throw an Exception
+-  When you use `[ServiceFilter(typeof(ValidationFilter))]`, you are telling ASP.NET Core:
+
+> "Please get an instance of `ValidationFilter` **from the DI container**, and use it as a filter for this controller or action."
+
+This allows you to inject **services like `ILogger`, `DbContext`, custom services, etc.** into your filter through constructor injection.
+
+---
+
+### ✅ Example:
+
+
+```csharp
+public class ValidationFilter : IActionFilter 
+{    
+private readonly ILogger<ValidationFilter> _logger;  
+public ValidationFilter(ILogger<ValidationFilter> logger)    
+{         _logger = logger;    
+}  
+public void OnActionExecuting(ActionExecutingContext context)
+{
+_logger.LogInformation("Validation running...");     
+if (!context.ModelState.IsValid)       
+{
+context.Result = new BadRequestObjectResult(context.ModelState); 
+}
+}
+
+```
+
+Register the filter in `Program.cs`:
+
+
+``` csharp
+builder.Services.AddScoped<ValidationFilter>();
+```
+
+Apply the filter to a controller or action:
+
+```csharp
+[ServiceFilter(typeof(ValidationFilter))]
+public class MyController : ControllerBase 
+{
+public IActionResult MyAction(SomeModel model) => Ok();
+}
+```
+
+
 
 ### **Main Differences**
 
