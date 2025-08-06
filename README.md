@@ -2519,8 +2519,36 @@ public class LogActionFilter : Attribute, IActionFilter
 - **Modifying the action result**: Change the result returned by the action before it is processed further.
 
 ***Note :***
-- if Used one method of them, don't make the other throw an Exception 
+- if Used one method of them, don't make the other throw an Exception
+
+### **Main Differences**
+
+| Feature                          | `IActionFilter` (or custom filter)                                     | `ActionFilterAttribute`            |
+| -------------------------------- | ---------------------------------------------------------------------- | ---------------------------------- |
+| **Type**                         | Interface                                                              | Abstract class (Attribute)         |
+| **How to apply**                 | Via `ServiceFilter`, `TypeFilter`, global .. Or inherit from Attribute | Directly as `[MyFilter]` attribute |
+| **Supports attribute usage**     | ❌ No                                                                   | ✅ Yes                              |
+| **Implements both sync & async** | ❌ You choose which interface                                           | ✅ Already supports both            |
+| **Ease of use**                  | Requires more setup                                                    | Easier (just inherit and override) |
+
 ---
+
+### ✅ **When to Use Which**
+
+- Use **`ActionFilterAttribute`** if:
+    
+    - You want an **attribute-based filter** (like `[MyFilter]`).
+        
+    - Simple logic that does not need complex DI.
+        
+- Use **`IActionFilter`** if:
+    
+    - You need **full control** or a **class-based filter** with **constructor DI**.
+        
+    - You will register it globally or via `ServiceFilter`/`TypeFilter`.
+  
+---
+
 ## 3️- **Result Filters**
 
 **What they do:**  
