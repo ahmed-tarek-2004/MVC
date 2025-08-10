@@ -2703,6 +2703,66 @@ At Program.cs
 | 3️⃣  | Before View rendering           | Change ViewData, swap ViewName, log info   | `OnResultExecuting` (in `IResultFilter` / `IAsyncResultFilter`) |
 | 4️⃣  | After View is rendered and sent | Cleanup, log completion, post-processing   | `OnResultExecuted` (in `IResultFilter` / `IAsyncResultFilter`)  |
 
+###  Think of it like this:
+| Step | Happens when...                 | Example                                    | Filter Type(s)                                                  |
+| ---- | ------------------------------- | ------------------------------------------ | --------------------------------------------------------------- |
+| 1️⃣  | Before action logic             | Logging, authorization, model manipulation | `OnActionExecuting` (in `IActionFilter` / `IAsyncActionFilter`) |
+| 2️⃣  | After action method returns     | Modify returned data or check exceptions   | `OnActionExecuted` (in `IActionFilter` / `IAsyncActionFilter`)  |
+| 3️⃣  | Before View rendering           | Change ViewData, swap ViewName, log info   | `OnResultExecuting` (in `IResultFilter` / `IAsyncResultFilter`) |
+| 4️⃣  | After View is rendered and sent | Cleanup, log completion, post-processing   | `OnResultExecuted` (in `IResultFilter` / `IAsyncResultFilter`)  |
+
+## Execution Order of Filters in ASP.NET Core
+
+ASP.NET Core executes filters in a specific order grouped by filter type:
+
+|Filter Type|Execution Order (On the way **IN**)|Execution Order (On the way **OUT**)|
+|---|---|---|
+|**Authorization**|1 (First)|Last (after action result)|
+|**Resource**|2|2|
+|**Action**|3|3|
+|**Exception**|Runs **only if an exception occurs** after **Action filters OnActionExecuting** but before **Result filters**|N/A (exception filters don't have an "OnResultExecuted")|
+|**Result**|4|1 (Last filter before response is sent)|
+
+---
+
+## Specifically for **Exception Filters**
+
+- They run **after Action filters’ OnActionExecuting and the action method itself** if an exception was thrown.
+    
+- They run **before Result filters and result execution**.
+    
+- Exception filters only execute if an unhandled exception occurs in the action or preceding filters.
+    
+
+---
+
+## A typical request flow with filters:
+
+1. **Authorization filters**: Run first to check if user is authorized.
+    
+2. **Resource filters**: Run next (before model binding).
+    
+3. **Action filters (OnActionExecuting)**: Run before the action.
+    
+4. **Action method executes**:
+    
+    - If it throws an exception:
+        
+        - Exception filters run here.
+            
+        - Result filters and result execution are skipped unless exception is handled.
+            
+5. **Action filters (OnActionExecuted)**: Run after action if no exception or if exception handled.
+    
+6. **Result filters (OnResultExecuting)**: Before the action result runs.
+    
+7. **Action result executes** (like rendering view or returning JSON).
+    
+8. **Result filters (OnResultExecuted)**: After the action result execution.
+    
+9. Response is sent to client.
+
+
 ---
 <img src="img/identity.png" alt="Screenshot" width="1000"/>
 
